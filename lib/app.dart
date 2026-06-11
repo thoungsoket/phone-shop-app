@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'features/onboarding/onboarding_screen.dart'; // Imported Onboarding Features
 import 'theme/app_theme.dart';
 
 class PhoneShopApp extends StatelessWidget {
@@ -12,11 +13,13 @@ class PhoneShopApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home: const HomeScreen(),
+      // Point home to OnboardingScreen to launch Screen 1 (Splash) first
+      home: const OnboardingScreen(), 
     );
   }
 }
 
+// Your main post-onboarding landing screen interface placeholder
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -29,7 +32,7 @@ class HomeScreen extends StatelessWidget {
       body: const Center(
         child: Text(
           'Welcome to Phone Shop App 🚀',
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
     );
