@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'features/onboarding/onboarding_screen.dart'; // Imported Onboarding Features
+import 'features/onboarding/onboarding_screen.dart';
+import 'features/home/home_screen.dart';
 import 'theme/app_theme.dart';
 
 class PhoneShopApp extends StatelessWidget {
