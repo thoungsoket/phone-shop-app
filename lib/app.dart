@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/home/home_screen.dart';
+import 'features/compare/compare_screen.dart';
+// import 'features/favorites/favorites_screen.dart'; // Commented out - Friend's part
 import 'theme/app_theme.dart';
 
 class PhoneShopApp extends StatelessWidget {
@@ -14,28 +16,16 @@ class PhoneShopApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      // Point home to OnboardingScreen to launch Screen 1 (Splash) first
-      home: const OnboardingScreen(), 
-    );
-  }
-}
-
-// Your main post-onboarding landing screen interface placeholder
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Phone Shop'),
-      ),
-      body: const Center(
-        child: Text(
-          'Welcome to Phone Shop App 🚀',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
+      home: const OnboardingScreen(),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
+        '/compare': (context) => const CompareScreen(),
+        // '/favorites': (context) => const FavoritesScreen(), // Commented out - Friend's part
+      },
+      onGenerateRoute: (settings) {
+        return null;
+      },
     );
   }
 }
