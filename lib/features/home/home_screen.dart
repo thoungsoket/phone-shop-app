@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../category/category_screen.dart';
 import '../compare/compare_screen.dart';
+import '../detail/product_detail_screen.dart';
 import '../search/search_delegate.dart';
 import '../data/product_data.dart';
 
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentBannerIndex = 0;
   Timer? _bannerTimer;
 
-  // Banner Configurations - ADDED navigationTarget
+  // Banner Configurations
   final List<Map<String, dynamic>> _bannerConfigs = [
     {
       'tag': 'LIMITED OFFER',
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'bgGradientStart': '0xFFE0F2FE',
       'bgGradientEnd': '0xFFBAE6FD',
       'accentColor': '0xFF0284C7',
-      'navigationTarget': 'Apple', // Navigate to Apple products
+      'navigationTarget': 'Apple',
     },
     {
       'tag': 'HOT DISCOUNTS',
@@ -50,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'bgGradientStart': '0xFFECFDF5',
       'bgGradientEnd': '0xFFA7F3D0',
       'accentColor': '0xFF059669',
-      'navigationTarget': 'Best Deals', // Navigate to Best Deals
+      'navigationTarget': 'Best Deals',
     },
     {
       'tag': 'NEW ARRIVAL',
@@ -61,12 +62,15 @@ class _HomeScreenState extends State<HomeScreen> {
       'bgGradientStart': '0xFFF1F5F9',
       'bgGradientEnd': '0xFFE2E8F0',
       'accentColor': '0xFF0F172A',
-      'navigationTarget': 'Accessories', // Navigate to Accessories
+      'navigationTarget': 'Accessories',
     },
   ];
 
   // Heart states
   final Map<int, bool> _favoritedDeals = {};
+  
+  // Cart states
+  final Map<int, bool> _cartItems = {};
 
   // Quick Actions
   final List<Map<String, dynamic>> _quickActions = [
@@ -84,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Accessories', 'icon': Icons.headphones_rounded, 'count': '26 Models'},
   ];
 
-  // ========== BRANDS - UPDATED WITH SVG LOGOS ==========
+  // ========== BRANDS ==========
   final List<Map<String, dynamic>> _brands = [
     {'name': 'Apple', 'iconPath': 'assets/images/brands/apple.svg'},
     {'name': 'Samsung', 'iconPath': 'assets/images/brands/samsung.svg'},
@@ -109,6 +113,35 @@ class _HomeScreenState extends State<HomeScreen> {
     {'id': 108, 'name': 'OnePlus 12', 'price': '\$899', 'oldPrice': '\$1058', 'discount': '-15%', 'img': 'assets/images/oneplus12.png'},
     {'id': 119, 'name': 'Vivo X100 Ultra', 'price': '\$1099', 'oldPrice': '\$1293', 'discount': '-15%', 'img': 'assets/images/vivo_x100_ultra.png'},
   ];
+
+  // ==================== ADD TO CART ====================
+  void _addToCart(Map<String, dynamic> product) {
+    final int productId = product['id'] as int;
+    setState(() {
+      _cartItems[productId] = true;
+    });
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '${product['name']} added to cart 🛒',
+                style: const TextStyle(fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xFF10B981),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -234,11 +267,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // ==================== PRODUCT DETAIL NAVIGATION ====================
+  void _navigateToProductDetail(Map<String, dynamic> product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductDetailScreen(product: product),
+      ),
+    );
+  }
+
   // ==================== BANNER BUTTON NAVIGATION ====================
   void _handleBannerButtonTap(Map<String, dynamic> config) {
     final target = config['navigationTarget'] as String;
     
-    // Navigate based on the target
     if (target == 'Best Deals') {
       _navigateToBestDeals();
     } else if (target == 'New Arrivals') {
@@ -249,7 +291,6 @@ class _HomeScreenState extends State<HomeScreen> {
                target == 'Accessories') {
       _navigateToCategory(target);
     } else {
-      // Assume it's a brand name
       _navigateToBrand(target);
     }
   }
@@ -288,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             _buildSectionDivider(),
 
-            // 4. Popular Brands - UPDATED
+            // 4. Popular Brands
             _buildSectionHeader('Popular Brands', showSeeAll: false),
             const SizedBox(height: 12),
             _buildBrandsStrip(),
@@ -296,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             _buildSectionDivider(),
 
-            // 5. New Arrivals
+            // 5. New Arrivals - ALL CLICKABLE
             _buildSectionHeader('New Arrivals', onSeeAllPressed: _navigateToNewArrivals),
             const SizedBox(height: 12),
             _buildNewArrivalsHorizontalList(),
@@ -304,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             _buildSectionDivider(),
 
-            // 6. Best Deals
+            // 6. Best Deals - ALL CLICKABLE
             _buildSectionHeader('🔥 Best Deals', onSeeAllPressed: _navigateToBestDeals),
             const SizedBox(height: 12),
             _buildBestDealsVerticalSection(),
@@ -408,7 +449,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text('MAIN', style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
                   ),
                   
-                  // ========== EXPANDABLE CATEGORIES ==========
                   _buildExpandableCategories(),
                   
                   _buildDrawerItem(
@@ -739,7 +779,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 padding: const EdgeInsets.all(3),
                 decoration: const BoxDecoration(color: Color(0xFFFF3B30), shape: BoxShape.circle),
-                child: const Text('0', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                child: Text(
+                  '${_cartItems.values.where((v) => v).length}',
+                  style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -782,7 +825,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==================== HERO BANNER - WITH WORKING BUTTONS ====================
+  // ==================== HERO BANNER ====================
   Widget _buildPremiumHeroBannerSlider() {
     return Column(
       children: [
@@ -834,7 +877,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text(config['subtitle']!, style: const TextStyle(color: Color(0xFF475569), fontSize: 11.5, fontWeight: FontWeight.w500, height: 1.2), maxLines: 2, overflow: TextOverflow.ellipsis),
                                 ),
                               ),
-                              // Banner Button - NOW WITH NAVIGATION
                               ElevatedButton(
                                 onPressed: () => _handleBannerButtonTap(config),
                                 style: ElevatedButton.styleFrom(
@@ -1036,7 +1078,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==================== BRANDS - UPDATED WITH SVG LOGOS ====================
+  // ==================== BRANDS ====================
   Widget _buildBrandsStrip() {
     return SizedBox(
       height: 60,
@@ -1098,7 +1140,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==================== NEW ARRIVALS ====================
+  // ==================== NEW ARRIVALS - ALL CLICKABLE ====================
   Widget _buildNewArrivalsHorizontalList() {
     return SizedBox(
       height: 255,
@@ -1111,101 +1153,134 @@ class _HomeScreenState extends State<HomeScreen> {
           final item = _newArrivals[index];
           final int itemId = item['id'] as int;
           bool isFav = _favoritedDeals[itemId] ?? false;
+          bool isInCart = _cartItems[itemId] ?? false;
 
-          return Container(
-            width: 165,
-            margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.015), blurRadius: 8, offset: const Offset(0, 4))],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(14)),
-                          padding: const EdgeInsets.all(8),
-                          child: Image.asset(
-                            item['img'],
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) => const Icon(Icons.phone_android_rounded, size: 44, color: Colors.grey),
-                          ),
-                        ),
-                        Positioned(
-                          left: 4,
-                          top: 4,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF10B981),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: const Text(
-                              'NEW',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 8,
-                                fontWeight: FontWeight.bold,
-                              ),
+          return GestureDetector(
+            onTap: () => _navigateToProductDetail(item),
+            child: Container(
+              width: 165,
+              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.015), blurRadius: 8, offset: const Offset(0, 4))],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(14)),
+                            padding: const EdgeInsets.all(8),
+                            child: Image.asset(
+                              item['img'],
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) => const Icon(Icons.phone_android_rounded, size: 44, color: Colors.grey),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          right: 4,
-                          top: 4,
-                          child: InkWell(
-                            onTap: () { setState(() { _favoritedDeals[itemId] = !isFav; }); },
+                          Positioned(
+                            left: 4,
+                            top: 4,
                             child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                              child: Icon(
-                                isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                                color: isFav ? const Color(0xFFFF3B30) : const Color(0xFF94A3B8),
-                                size: 16,
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF10B981),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text(
+                                'NEW',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
+                          Positioned(
+                            right: 4,
+                            top: 4,
+                            child: InkWell(
+                              onTap: () { setState(() { _favoritedDeals[itemId] = !isFav; }); },
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                child: Icon(
+                                  isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                                  color: isFav ? const Color(0xFFFF3B30) : const Color(0xFF94A3B8),
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(item['tag'].toUpperCase(), style: const TextStyle(color: Color(0xFF007BF6), fontSize: 10, fontWeight: FontWeight.w800)),
+                        Row(
+                          children: [
+                            const Icon(Icons.star_rounded, color: Colors.amber, size: 12),
+                            const SizedBox(width: 2),
+                            Text(item['rating'], style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF475569))),
+                          ],
                         )
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(item['tag'].toUpperCase(), style: const TextStyle(color: Color(0xFF007BF6), fontSize: 10, fontWeight: FontWeight.w800)),
-                      Row(
-                        children: [
-                          const Icon(Icons.star_rounded, color: Colors.amber, size: 12),
-                          const SizedBox(width: 2),
-                          Text(item['rating'], style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF475569))),
-                        ],
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF0F172A)), maxLines: 1, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(item['price'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: Color(0xFF0F172A))),
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(color: Color(0xFF007BF6), shape: BoxShape.circle),
-                        child: const Icon(Icons.add_rounded, color: Colors.white, size: 16),
-                      )
-                    ],
-                  )
-                ],
+                    const SizedBox(height: 2),
+                    Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF0F172A)), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(item['price'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: Color(0xFF0F172A))),
+                        GestureDetector(
+                          onTap: () {
+                            if (!isInCart) {
+                              _addToCart(item);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Already in cart! 🛒'),
+                                  duration: Duration(seconds: 1),
+                                  backgroundColor: Colors.orange,
+                                ),
+                              );
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: (isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6)).withOpacity(0.3),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              isInCart ? Icons.check_rounded : Icons.add_rounded,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -1214,7 +1289,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==================== BEST DEALS ====================
+  // ==================== BEST DEALS - ALL CLICKABLE ====================
   Widget _buildBestDealsVerticalSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1226,86 +1301,128 @@ class _HomeScreenState extends State<HomeScreen> {
           final item = _bestDeals[index];
           final int id = item['id'] as int;
           bool isFav = _favoritedDeals[id] ?? false;
+          bool isInCart = _cartItems[id] ?? false;
 
-          return Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 8, offset: const Offset(0, 4))],
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.all(6),
-                  child: Stack(
-                    children: [
-                      Image.asset(
-                        item['img'],
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.phone_android_rounded, size: 36, color: Colors.grey),
-                      ),
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF3B30),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: Text(
-                            item['discount'],
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 8,
-                              fontWeight: FontWeight.bold,
+          return GestureDetector(
+            onTap: () => _navigateToProductDetail(item),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 8, offset: const Offset(0, 4))],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.all(6),
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          item['img'],
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => const Icon(Icons.phone_android_rounded, size: 36, color: Colors.grey),
+                        ),
+                        Positioned(
+                          left: 0,
+                          top: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFF3B30),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            child: Text(
+                              item['discount'],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF3B30).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'BEST DEAL',
+                            style: TextStyle(color: Color(0xFFFF3B30), fontSize: 9, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF0F172A))),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(item['price'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Color(0xFFFF3B30))),
+                            const SizedBox(width: 8),
+                            Text(item['oldPrice'], style: const TextStyle(decoration: TextDecoration.lineThrough, color: Color(0xFF94A3B8), fontSize: 12)),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Column(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFF3B30).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          'BEST DEAL',
-                          style: TextStyle(color: Color(0xFFFF3B30), fontSize: 9, fontWeight: FontWeight.bold),
+                      IconButton(
+                        icon: Icon(isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: isFav ? const Color(0xFFFF3B30) : const Color(0xFF94A3B8), size: 24),
+                        onPressed: () { setState(() { _favoritedDeals[id] = !isFav; }); },
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (!isInCart) {
+                            _addToCart(item);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Already in cart! 🛒'),
+                                duration: Duration(seconds: 1),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: (isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6)).withOpacity(0.3),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            isInCart ? Icons.check_rounded : Icons.add_rounded,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF0F172A))),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(item['price'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Color(0xFFFF3B30))),
-                          const SizedBox(width: 8),
-                          Text(item['oldPrice'], style: const TextStyle(decoration: TextDecoration.lineThrough, color: Color(0xFF94A3B8), fontSize: 12)),
-                        ],
-                      )
                     ],
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: isFav ? const Color(0xFFFF3B30) : const Color(0xFF94A3B8), size: 24),
-                  onPressed: () { setState(() { _favoritedDeals[id] = !isFav; }); },
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           );
         },

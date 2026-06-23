@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/compare/compare_screen.dart';
-// import 'features/favorites/favorites_screen.dart'; // Commented out - Friend's part
+// import 'features/favorites/favorites_screen.dart';
 import 'theme/app_theme.dart';
 
 class PhoneShopApp extends StatelessWidget {
@@ -21,7 +21,7 @@ class PhoneShopApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
         '/compare': (context) => const CompareScreen(),
-        // '/favorites': (context) => const FavoritesScreen(), // Commented out - Friend's part
+        // '/favorites': (context) => const FavoritesScreen(),
       },
       onGenerateRoute: (settings) {
         return null;
