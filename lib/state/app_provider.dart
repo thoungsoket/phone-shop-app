@@ -211,6 +211,7 @@ class CartProvider extends ChangeNotifier {
     return '$productId|${storage ?? ''}|${color ?? ''}|$itemPrice';
   }
 
+  // ✅ IMPROVED: _normalizeProduct with better brand detection
   Map<String, dynamic> _normalizeProduct(
     Map<String, dynamic> product, {
     String? color,
@@ -222,8 +223,33 @@ class CartProvider extends ChangeNotifier {
     normalized['id'] =
         product['id'] ?? product['name']?.toString() ?? 'Product';
     normalized['name'] = product['name']?.toString() ?? 'Product';
-    normalized['brand'] =
-        product['brand']?.toString() ?? product['tag']?.toString() ?? 'Brand';
+    
+    // ✅ IMPROVED: Better brand detection
+    String brandValue = product['brand']?.toString() ?? '';
+    if (brandValue.isEmpty) {
+      brandValue = product['tag']?.toString() ?? '';
+    }
+    if (brandValue.isEmpty) {
+      // Fallback: detect from product name
+      final name = product['name']?.toString() ?? '';
+      if (name.contains('iPhone') || name.contains('iPad') || name.contains('Apple Watch')) {
+        brandValue = 'Apple';
+      } else if (name.contains('Galaxy') || name.contains('Samsung')) {
+        brandValue = 'Samsung';
+      } else if (name.contains('Xiaomi')) {
+        brandValue = 'Xiaomi';
+      } else if (name.contains('OnePlus')) {
+        brandValue = 'OnePlus';
+      } else if (name.contains('Vivo')) {
+        brandValue = 'Vivo';
+      } else if (name.contains('Oppo')) {
+        brandValue = 'Oppo';
+      } else {
+        brandValue = 'Brand';
+      }
+    }
+    normalized['brand'] = brandValue;
+    
     normalized['price'] = price ?? _readPrice(product['price']);
     normalized['image'] =
         image ??
@@ -234,6 +260,8 @@ class CartProvider extends ChangeNotifier {
         storage ?? product['storage']?.toString() ?? '256GB';
     normalized['color'] = color ?? product['color']?.toString() ?? 'Default';
     normalized['rating'] = _readRating(product['rating']);
+    normalized['category'] = product['category']?.toString() ?? 'Smartphones';
+    
     return normalized;
   }
 

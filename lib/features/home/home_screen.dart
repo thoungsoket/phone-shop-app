@@ -120,12 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Vivo', 'iconPath': 'assets/images/brands/vivo.svg'},
   ];
 
+  // ✅ FIXED: Added 'brand' field to new arrivals
   final List<Map<String, dynamic>> _newArrivals = [
     {
       'id': 1,
       'name': 'iPhone 17 Pro Max',
       'price': '\$1399',
       'tag': 'Apple',
+      'brand': 'Apple', // ✅ ADDED
       'img': 'assets/images/ip17promax.png',
       'rating': '4.9',
     },
@@ -134,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Galaxy S26 Ultra',
       'price': '\$1399',
       'tag': 'Samsung',
+      'brand': 'Samsung', // ✅ ADDED
       'img': 'assets/images/s26_ultra.png',
       'rating': '4.9',
     },
@@ -142,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'OnePlus 12',
       'price': '\$899',
       'tag': 'OnePlus',
+      'brand': 'OnePlus', // ✅ ADDED
       'img': 'assets/images/oneplus12.png',
       'rating': '4.5',
     },
@@ -150,11 +154,13 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Vivo X100 Ultra',
       'price': '\$1099',
       'tag': 'Vivo',
+      'brand': 'Vivo', // ✅ ADDED
       'img': 'assets/images/vivo_x100_ultra.png',
       'rating': '4.5',
     },
   ];
 
+  // ✅ FIXED: Added 'brand' field to best deals
   final List<Map<String, dynamic>> _bestDeals = [
     {
       'id': 1,
@@ -163,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'oldPrice': '\$1646',
       'discount': '-15%',
       'img': 'assets/images/ip17promax.png',
+      'brand': 'Apple', // ✅ ADDED
     },
     {
       'id': 31,
@@ -171,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'oldPrice': '\$1646',
       'discount': '-15%',
       'img': 'assets/images/s26_ultra.png',
+      'brand': 'Samsung', // ✅ ADDED
     },
     {
       'id': 108,
@@ -179,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'oldPrice': '\$1058',
       'discount': '-15%',
       'img': 'assets/images/oneplus12.png',
+      'brand': 'OnePlus', // ✅ ADDED
     },
     {
       'id': 119,
@@ -187,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'oldPrice': '\$1293',
       'discount': '-15%',
       'img': 'assets/images/vivo_x100_ultra.png',
+      'brand': 'Vivo', // ✅ ADDED
     },
   ];
 
@@ -257,11 +267,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // ✅ FIXED: _navigateToProductDetail with brand detection
   void _navigateToProductDetail(Map<String, dynamic> product) {
+    // Create a copy of the product to avoid modifying the original
+    final updatedProduct = Map<String, dynamic>.from(product);
+    
+    // If the product has 'tag' but not 'brand', copy it
+    if (updatedProduct['tag'] != null && updatedProduct['brand'] == null) {
+      updatedProduct['brand'] = updatedProduct['tag'];
+    }
+    
+    // If there's no brand at all, detect from name
+    if (updatedProduct['brand'] == null || updatedProduct['brand'] == 'Brand') {
+      final name = updatedProduct['name']?.toString() ?? '';
+      if (name.contains('iPhone') || name.contains('iPad') || name.contains('Apple Watch') || name.contains('Apple')) {
+        updatedProduct['brand'] = 'Apple';
+      } else if (name.contains('Galaxy') || name.contains('Samsung')) {
+        updatedProduct['brand'] = 'Samsung';
+      } else if (name.contains('Xiaomi')) {
+        updatedProduct['brand'] = 'Xiaomi';
+      } else if (name.contains('OnePlus')) {
+        updatedProduct['brand'] = 'OnePlus';
+      } else if (name.contains('Vivo')) {
+        updatedProduct['brand'] = 'Vivo';
+      } else if (name.contains('Oppo')) {
+        updatedProduct['brand'] = 'Oppo';
+      } else {
+        updatedProduct['brand'] = 'Brand';
+      }
+    }
+    
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProductDetailScreen(product: product),
+        builder: (context) => ProductDetailScreen(product: updatedProduct),
       ),
     );
   }
@@ -968,7 +1007,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Color(0xFF0F172A),
                 size: 24,
               ),
-              onPressed: _navigateToCart, // ✅ FIXED: Now navigates to cart
+              onPressed: _navigateToCart,
             ),
             Positioned(
               right: 6,

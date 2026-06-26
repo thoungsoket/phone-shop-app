@@ -9,7 +9,7 @@ import '../detail/product_detail_screen.dart';
 import '../data/product_data.dart';
 import '../search/search_delegate.dart';
 import '../../state/app_provider.dart';
-import '../category/category_screen.dart'; // ✅ ADD THIS IMPORT
+import '../category/category_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -23,20 +23,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   bool _isDarkMode = false;
   bool _isCategoriesExpanded = false;
   String _searchQuery = '';
+  final TextEditingController _searchController = TextEditingController(); // ✅ ADDED
 
   final List<Map<String, dynamic>> _categories = [
-    {
-      'name': 'Smartphones',
-      'icon': Icons.phone_android_rounded,
-      'count': '44 Models',
-    },
+    {'name': 'Smartphones', 'icon': Icons.phone_android_rounded, 'count': '44 Models'},
     {'name': 'Tablets', 'icon': Icons.tablet_mac_rounded, 'count': '20 Models'},
     {'name': 'Wearables', 'icon': Icons.watch_rounded, 'count': '20 Models'},
-    {
-      'name': 'Accessories',
-      'icon': Icons.headphones_rounded,
-      'count': '26 Models',
-    },
+    {'name': 'Accessories', 'icon': Icons.headphones_rounded, 'count': '26 Models'},
   ];
 
   final List<Map<String, dynamic>> _brands = [
@@ -98,8 +91,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            CategoryScreen(categoryName: categoryName, initialFilter: 'All'),
+        builder: (context) => CategoryScreen(categoryName: categoryName, initialFilter: 'All'),
       ),
     );
   }
@@ -108,8 +100,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            CategoryScreen(categoryName: brandName, initialFilter: brandName),
+        builder: (context) => CategoryScreen(categoryName: brandName, initialFilter: brandName),
       ),
     );
   }
@@ -133,6 +124,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   void _removeFromFavorites(Map<String, dynamic> product) {
     context.read<CartProvider>().removeFavorite(product);
+    
+    // ✅ Clear search when removing an item
+    if (_searchQuery.isNotEmpty) {
+      _searchQuery = '';
+      _searchController.clear();
+    }
+    
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Removed from favorites'),
@@ -149,6 +147,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     });
   }
 
+  void _clearSearch() {
+    setState(() {
+      _searchQuery = '';
+      _searchController.clear();
+    });
+  }
+
   List<Map<String, dynamic>> _visibleFavorites(
     List<Map<String, dynamic>> favorites,
   ) {
@@ -159,6 +164,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       final brand = product['brand']?.toString().toLowerCase() ?? '';
       return name.contains(query) || brand.contains(query);
     }).toList();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -182,48 +193,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 8.0),
         child: IconButton(
-          icon: const Icon(
-            Icons.menu_rounded,
-            color: Color(0xFF0F172A),
-            size: 26,
-          ),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
+          icon: const Icon(Icons.menu_rounded, color: Color(0xFF0F172A), size: 26),
+          onPressed: () { _scaffoldKey.currentState?.openDrawer(); },
         ),
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'PhoneHub',
-            style: TextStyle(
-              color: Color(0xFF007BF6),
-              fontWeight: FontWeight.w900,
-              fontSize: 20,
-              letterSpacing: -0.8,
-              height: 1.0,
-            ),
-          ),
+          const Text('PhoneHub', style: TextStyle(color: Color(0xFF007BF6), fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.8, height: 1.0)),
           const SizedBox(height: 1),
-          Text(
-            '📍 Phnom Penh Branch',
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.w500,
-              fontSize: 11,
-              height: 1.0,
-            ),
-          ),
+          Text('📍 Phnom Penh Branch', style: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.w500, fontSize: 11, height: 1.0)),
         ],
       ),
       actions: [
         IconButton(
-          icon: const Icon(
-            Icons.search_rounded,
-            color: Color(0xFF0F172A),
-            size: 24,
-          ),
+          icon: const Icon(Icons.search_rounded, color: Color(0xFF0F172A), size: 24),
           onPressed: () {
             showSearch(
               context: context,
@@ -236,11 +220,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         Stack(
           children: [
             IconButton(
-              icon: const Icon(
-                Icons.shopping_cart_outlined,
-                color: Color(0xFF0F172A),
-                size: 24,
-              ),
+              icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF0F172A), size: 24),
               onPressed: _navigateToCart,
             ),
             Positioned(
@@ -248,17 +228,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               top: 6,
               child: Container(
                 padding: const EdgeInsets.all(3),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFF3B30),
-                  shape: BoxShape.circle,
-                ),
+                decoration: const BoxDecoration(color: Color(0xFFFF3B30), shape: BoxShape.circle),
                 child: Text(
                   '${context.watch<CartProvider>().itemCount}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -302,50 +275,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           border: Border.all(color: Colors.white, width: 2),
                         ),
                         child: const Center(
-                          child: Icon(
-                            Icons.person_rounded,
-                            color: Colors.white,
-                            size: 28,
-                          ),
+                          child: Icon(Icons.person_rounded, color: Colors.white, size: 28),
                         ),
                       ),
                       const SizedBox(width: 14),
                       const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Welcome back! 👋',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            'Alex Johnson',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'alex@email.com',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                            ),
-                          ),
+                          Text('Welcome back! 👋', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500)),
+                          Text('Alex Johnson', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text('alex@email.com', style: TextStyle(color: Colors.white70, fontSize: 12)),
                         ],
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(20),
@@ -353,20 +299,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.location_on_rounded,
-                          color: Colors.white,
-                          size: 14,
-                        ),
+                        Icon(Icons.location_on_rounded, color: Colors.white, size: 14),
                         SizedBox(width: 4),
-                        Text(
-                          '📍 Phnom Penh Branch',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        Text('📍 Phnom Penh Branch', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
                       ],
                     ),
                   ),
@@ -380,69 +315,37 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 12, 16, 8),
-                    child: Text(
-                      'MAIN',
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
+                    child: Text('MAIN', style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
                   ),
                   _buildExpandableCategories(),
                   _buildDrawerItem(
                     icon: Icons.compare_arrows_rounded,
                     title: 'Compare',
                     subtitle: 'Compare phones side-by-side',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _navigateToCompare();
-                    },
+                    onTap: () { Navigator.pop(context); _navigateToCompare(); },
                   ),
                   _buildDrawerItem(
                     icon: Icons.favorite_rounded,
                     title: 'Favorites',
                     subtitle: 'Your saved items',
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
+                    onTap: () { Navigator.pop(context); },
                   ),
                   _buildDrawerItem(
                     icon: Icons.local_offer_rounded,
                     title: 'Promotions',
                     subtitle: 'Active deals & coupons',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _navigateToPromotions();
-                    },
+                    onTap: () { Navigator.pop(context); _navigateToPromotions(); },
                   ),
                   _buildDrawerItem(
                     icon: Icons.shopping_bag_rounded,
                     title: 'Cart',
                     subtitle: 'View your cart',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _navigateToCart();
-                    },
+                    onTap: () { Navigator.pop(context); _navigateToCart(); },
                   ),
-                  const Divider(
-                    height: 24,
-                    thickness: 1,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
+                  const Divider(height: 24, thickness: 1, indent: 16, endIndent: 16),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 16, 8),
-                    child: Text(
-                      'SUPPORT',
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
+                    child: Text('SUPPORT', style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
                   ),
                   _buildDrawerItem(
                     icon: Icons.build_rounded,
@@ -454,10 +357,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     icon: Icons.storefront_rounded,
                     title: 'Store Branches',
                     subtitle: 'Find nearby stores',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _navigateToNearby();
-                    },
+                    onTap: () { Navigator.pop(context); _navigateToNearby(); },
                   ),
                   _buildDrawerItem(
                     icon: Icons.headset_mic_rounded,
@@ -465,23 +365,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     subtitle: '24/7 live chat',
                     onTap: () => _navigateToDrawerItem('Customer Support'),
                   ),
-                  const Divider(
-                    height: 24,
-                    thickness: 1,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
+                  const Divider(height: 24, thickness: 1, indent: 16, endIndent: 16),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 16, 8),
-                    child: Text(
-                      'SETTINGS',
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
+                    child: Text('SETTINGS', style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
                   ),
                   _buildDrawerItem(
                     icon: Icons.settings_rounded,
@@ -490,66 +377,35 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     onTap: () => _navigateToDrawerItem('Settings'),
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: _isDarkMode
-                          ? const Color(0xFF1E293B).withOpacity(0.08)
-                          : const Color(0xFF007BF6).withOpacity(0.06),
+                      color: _isDarkMode ? const Color(0xFF1E293B).withOpacity(0.08) : const Color(0xFF007BF6).withOpacity(0.06),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: ListTile(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
                       leading: Icon(
-                        _isDarkMode
-                            ? Icons.dark_mode_rounded
-                            : Icons.light_mode_rounded,
-                        color: _isDarkMode
-                            ? const Color(0xFF1E293B)
-                            : const Color(0xFF007BF6),
+                        _isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                        color: _isDarkMode ? const Color(0xFF1E293B) : const Color(0xFF007BF6),
                         size: 24,
                       ),
                       title: Text(
                         _isDarkMode ? 'Dark Mode (On)' : 'Dark Mode (Off)',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: _isDarkMode
-                              ? const Color(0xFF1E293B)
-                              : const Color(0xFF0F172A),
-                        ),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: _isDarkMode ? const Color(0xFF1E293B) : const Color(0xFF0F172A)),
                       ),
                       subtitle: Text(
-                        _isDarkMode
-                            ? 'Switch to light theme'
-                            : 'Switch to dark theme',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                        ),
+                        _isDarkMode ? 'Switch to light theme' : 'Switch to dark theme',
+                        style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                       ),
                       trailing: Switch(
                         value: _isDarkMode,
-                        onChanged: (value) {
-                          setState(() {
-                            _isDarkMode = value;
-                          });
-                        },
+                        onChanged: (value) { setState(() { _isDarkMode = value; }); },
                         activeColor: const Color(0xFF007BF6),
                         inactiveThumbColor: Colors.grey.shade400,
                         inactiveTrackColor: Colors.grey.shade200,
                       ),
-                      onTap: () {
-                        setState(() {
-                          _isDarkMode = !_isDarkMode;
-                        });
-                      },
+                      onTap: () { setState(() { _isDarkMode = !_isDarkMode; }); },
                     ),
                   ),
                 ],
@@ -557,18 +413,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.grey.shade200)),
-              ),
+              decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade200))),
               child: Center(
-                child: Text(
-                  'PhoneHub v2.4.1',
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child: Text('PhoneHub v2.4.1', style: TextStyle(color: Colors.grey.shade400, fontSize: 12, fontWeight: FontWeight.w500)),
               ),
             ),
           ],
@@ -595,23 +442,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
           child: Icon(icon, color: const Color(0xFF007BF6), size: 22),
         ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF0F172A),
-          ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-        ),
-        trailing: const Icon(
-          Icons.chevron_right_rounded,
-          color: Color(0xFF94A3B8),
-          size: 20,
-        ),
+        title: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
+        subtitle: Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
+        trailing: const Icon(Icons.chevron_right_rounded, color: Color(0xFF94A3B8), size: 20),
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       ),
@@ -627,9 +460,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             decoration: BoxDecoration(
-              color: _isCategoriesExpanded
-                  ? const Color(0xFF007BF6).withOpacity(0.08)
-                  : Colors.transparent,
+              color: _isCategoriesExpanded ? const Color(0xFF007BF6).withOpacity(0.08) : Colors.transparent,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -640,43 +471,22 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     color: const Color(0xFF007BF6).withOpacity(0.08),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(
-                    Icons.category_rounded,
-                    color: Color(0xFF007BF6),
-                    size: 22,
-                  ),
+                  child: const Icon(Icons.category_rounded, color: Color(0xFF007BF6), size: 22),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Categories',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF0F172A),
-                        ),
-                      ),
-                      Text(
-                        'Browse all products',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
+                      const Text('Categories', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
+                      Text('Browse all products', style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
                     ],
                   ),
                 ),
                 AnimatedRotation(
                   turns: _isCategoriesExpanded ? 0.5 : 0,
                   duration: const Duration(milliseconds: 300),
-                  child: const Icon(
-                    Icons.arrow_drop_down_rounded,
-                    color: Color(0xFF94A3B8),
-                    size: 28,
-                  ),
+                  child: const Icon(Icons.arrow_drop_down_rounded, color: Color(0xFF94A3B8), size: 28),
                 ),
               ],
             ),
@@ -697,9 +507,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               }).toList(),
             ),
           ),
-          crossFadeState: _isCategoriesExpanded
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
+          crossFadeState: _isCategoriesExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 300),
           firstCurve: Curves.easeIn,
           secondCurve: Curves.easeOut,
@@ -708,12 +516,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  // ✅ FIXED: This now correctly navigates to the category screen
   Widget _buildSubCategoryItem(Map<String, dynamic> category) {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
-        // Navigate directly to the category screen with the category name
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -727,9 +533,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Colors.grey.shade200, width: 0.5),
-          ),
+          border: Border(bottom: BorderSide(color: Colors.grey.shade200, width: 0.5)),
         ),
         child: Row(
           children: [
@@ -739,26 +543,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    category['name'],
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF0F172A),
-                    ),
-                  ),
-                  Text(
-                    category['count'],
-                    style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
-                  ),
+                  Text(category['name'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF0F172A))),
+                  Text(category['count'], style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
                 ],
               ),
             ),
-            const Icon(
-              Icons.chevron_right_rounded,
-              color: Color(0xFF94A3B8),
-              size: 20,
-            ),
+            const Icon(Icons.chevron_right_rounded, color: Color(0xFF94A3B8), size: 20),
           ],
         ),
       ),
@@ -789,15 +579,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: Colors.white,
       child: TextField(
+        controller: _searchController, // ✅ Added controller
         decoration: InputDecoration(
           hintText: 'Search favorites...',
           prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.clear, color: Color(0xFF94A3B8)),
-                  onPressed: () {
-                    _performSearch('');
-                  },
+                  onPressed: _clearSearch, // ✅ Clear search when X is pressed
                 )
               : null,
           filled: true,
@@ -854,17 +643,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            _searchQuery.isNotEmpty
-                ? Icons.search_off_rounded
-                : Icons.favorite_border_rounded,
+            _searchQuery.isNotEmpty ? Icons.search_off_rounded : Icons.favorite_border_rounded,
             size: 80,
             color: Colors.grey.shade300,
           ),
           const SizedBox(height: 16),
           Text(
-            _searchQuery.isNotEmpty
-                ? 'No favorites match your search'
-                : 'No favorites yet',
+            _searchQuery.isNotEmpty ? 'No favorites match your search' : 'No favorites yet',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -873,9 +658,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            _searchQuery.isNotEmpty
-                ? 'Try a different search term'
-                : 'Start saving your favorite devices',
+            _searchQuery.isNotEmpty ? 'Try a different search term' : 'Start saving your favorite devices ❤️',
             style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           ),
           const SizedBox(height: 24),
@@ -887,10 +670,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF007BF6),
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -927,11 +707,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final String brand = item['brand'] as String? ?? 'Brand';
     final String name = item['name'] as String? ?? 'Product';
     final num price = item['price'] as num? ?? 0;
-    final String priceText = price % 1 == 0
-        ? price.toInt().toString()
-        : price.toStringAsFixed(2);
-    final String image =
-        item['image'] as String? ?? 'assets/images/placeholder.png';
+    final String priceText = price % 1 == 0 ? price.toInt().toString() : price.toStringAsFixed(2);
+    final String image = item['image'] as String? ?? 'assets/images/placeholder.png';
     final String storage = item['storage'] as String? ?? '256GB';
     final String color = item['color'] as String? ?? 'Default';
     final double rating = (item['rating'] as num?)?.toDouble() ?? 4.5;
@@ -964,9 +741,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FAFC),
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -974,11 +749,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         image,
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.phone_android_rounded,
-                            size: 40,
-                            color: Colors.grey,
-                          );
+                          return const Icon(Icons.phone_android_rounded, size: 40, color: Colors.grey);
                         },
                       ),
                     ),
@@ -988,10 +759,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     left: 6,
                     top: 6,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: const Color(0xFF007BF6).withOpacity(0.9),
                         borderRadius: BorderRadius.circular(4),
@@ -1065,11 +833,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         ),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.star_rounded,
-                              color: Colors.amber,
-                              size: 10,
-                            ),
+                            const Icon(Icons.star_rounded, color: Colors.amber, size: 10),
                             const SizedBox(width: 2),
                             Text(
                               rating.toStringAsFixed(1),
@@ -1134,13 +898,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 16,
-            offset: const Offset(0, -4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 16, offset: const Offset(0, -4))],
       ),
       child: BottomNavigationBar(
         currentIndex: 2,
@@ -1173,28 +931,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
         elevation: 0,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.compare_arrows_rounded),
-            label: 'Compare',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_rounded),
-            activeIcon: Icon(Icons.favorite_rounded),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.storefront_rounded),
-            label: 'Nearby',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline_rounded),
-            activeIcon: Icon(Icons.person_rounded),
-            label: 'Profile',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.compare_arrows_rounded), label: 'Compare'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite_rounded), activeIcon: Icon(Icons.favorite_rounded), label: 'Favorites'),
+          BottomNavigationBarItem(icon: Icon(Icons.storefront_rounded), label: 'Nearby'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), activeIcon: Icon(Icons.person_rounded), label: 'Profile'),
         ],
       ),
     );

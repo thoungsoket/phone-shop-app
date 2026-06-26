@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../features/data/product_data.dart';
+import '../../features/detail/product_detail_screen.dart'; // ✅ ADD THIS IMPORT
 
 class ProductSearchDelegate extends SearchDelegate<String> {
   final List<Map<String, dynamic>> allProducts;
   
-  // UPDATED: Use actual product names that exist in your data
   final List<String> recentSearches = [
     'iPhone 17 Pro Max',
     'Galaxy S26 Ultra',
@@ -228,82 +228,50 @@ class ProductSearchDelegate extends SearchDelegate<String> {
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
         final product = suggestions[index];
-        return ListTile(
-          leading: Container(
-            width: 50,
-            height: 50,
+        return _buildSuggestionTile(context, product);
+      },
+    );
+  }
+
+  // ✅ FIXED: Suggestion tile with navigation
+  Widget _buildSuggestionTile(BuildContext context, Map<String, dynamic> product) {
+    return ListTile(
+      leading: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            product['image'],
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.phone_android_rounded, size: 24, color: Colors.grey),
+          ),
+        ),
+      ),
+      title: Text(
+        product['name'],
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                product['image'],
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.phone_android_rounded, size: 24, color: Colors.grey),
-              ),
-            ),
-          ),
-          title: Text(
-            product['name'],
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF007BF6).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: Text(
-                  product['brand'],
-                  style: const TextStyle(
-                    color: Color(0xFF007BF6),
-                    fontSize: 9,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                '\$${product['price']}',
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Row(
-                children: [
-                  const Icon(Icons.star_rounded, color: Colors.amber, size: 12),
-                  Text(
-                    '${product['rating']}',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          trailing: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFF007BF6).withOpacity(0.08),
-              borderRadius: BorderRadius.circular(8),
+              color: const Color(0xFF007BF6).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(3),
             ),
             child: Text(
-              product['category'],
+              product['brand'],
               style: const TextStyle(
                 color: Color(0xFF007BF6),
                 fontSize: 9,
@@ -311,16 +279,59 @@ class ProductSearchDelegate extends SearchDelegate<String> {
               ),
             ),
           ),
-          onTap: () {
-            close(context, product['name']);
-            // Navigate to product detail
-            // You can implement navigation here later
-          },
+          const SizedBox(width: 6),
+          Text(
+            '\$${product['price']}',
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Row(
+            children: [
+              const Icon(Icons.star_rounded, color: Colors.amber, size: 12),
+              Text(
+                '${product['rating']}',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 11,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: const Color(0xFF007BF6).withOpacity(0.08),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          product['category'],
+          style: const TextStyle(
+            color: Color(0xFF007BF6),
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      onTap: () {
+        // ✅ FIXED: Navigate to product detail
+        close(context, product['name']);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailScreen(product: product),
+          ),
         );
       },
     );
   }
 
+  // ✅ FIXED: Product tile with navigation
   Widget _buildProductTile(BuildContext context, Map<String, dynamic> product) {
     bool isBestDeal = product['id'] == 1 || product['id'] == 31 ||
         product['id'] == 60 || product['id'] == 85 ||
@@ -472,13 +483,25 @@ class ProductSearchDelegate extends SearchDelegate<String> {
         trailing: IconButton(
           icon: const Icon(Icons.chevron_right_rounded),
           onPressed: () {
+            // ✅ FIXED: Navigate to product detail
             close(context, product['name']);
-            // Navigate to product detail
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductDetailScreen(product: product),
+              ),
+            );
           },
         ),
         onTap: () {
+          // ✅ FIXED: Navigate to product detail
           close(context, product['name']);
-          // Navigate to product detail
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetailScreen(product: product),
+            ),
+          );
         },
       ),
     );
