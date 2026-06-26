@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
+import 'features/favorites/favorites_screen.dart';
+import 'features/nearby/nearby_screen.dart';
+import 'features/map/map_screen.dart';
+import 'features/promotions/promotions_screen.dart';
+import 'features/cart/cart_screen.dart';
+import 'features/checkout/checkout_screen.dart';
+import 'features/checkout/order_success_screen.dart';
 
 class PhoneShopApp extends StatelessWidget {
   const PhoneShopApp({super.key});
@@ -12,7 +19,7 @@ class PhoneShopApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home: const HomeScreen(),
+      home: const AppScreen(),
     );
   }
 }
