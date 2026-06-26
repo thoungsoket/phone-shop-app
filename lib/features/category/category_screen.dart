@@ -3,6 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../data/product_data.dart';
 import '../search/search_delegate.dart';
 import '../detail/product_detail_screen.dart';
+import '../cart/cart_screen.dart';
+import '../compare/compare_screen.dart';
+import '../favorites/favorites_screen.dart';
+import '../nearby/nearby_screen.dart';
+import '../promotions/promotions_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -79,6 +84,56 @@ class _CategoryScreenState extends State<CategoryScreen> {
     ],
   };
 
+  // ==================== NAVIGATION METHODS ====================
+  
+  void _navigateToProductDetail(Map<String, dynamic> product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductDetailScreen(product: product),
+      ),
+    );
+  }
+
+  void _navigateToCart() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CartScreen()),
+    );
+  }
+
+  void _navigateToCompare() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CompareScreen()),
+    );
+  }
+
+  void _navigateToFavorites() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+    );
+  }
+
+  void _navigateToNearby() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NearbyScreen()),
+    );
+  }
+
+  void _navigateToPromotions() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PromotionsScreen()),
+    );
+  }
+
+  void _navigateToHome() {
+    Navigator.popUntil(context, (route) => route.isFirst);
+  }
+
   // ==================== HELPER METHODS ====================
   bool _isInNewArrivals(Map<String, dynamic> product) {
     return product['isNew'] == true;
@@ -119,16 +174,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
-
-  // ==================== NAVIGATION TO PRODUCT DETAIL ====================
-  void _navigateToProductDetail(Map<String, dynamic> product) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProductDetailScreen(product: product),
       ),
     );
   }
@@ -280,6 +325,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: _buildAppBar(displayName),
       body: _buildBody(),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -294,7 +340,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           } else {
-            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+            _navigateToHome();
           }
         },
       ),
@@ -322,7 +368,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           children: [
             IconButton(
               icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF0F172A)),
-              onPressed: () {},
+              onPressed: _navigateToCart, // ✅ FIXED: Navigates to cart
             ),
             Positioned(
               right: 6,
@@ -1066,6 +1112,54 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // ==================== BOTTOM NAVIGATION ====================
+  Widget _buildBottomNavigationBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 16, offset: const Offset(0, -4))],
+      ),
+      child: BottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 0) {
+            _navigateToHome();
+          } else if (index == 1) {
+            _navigateToCompare();
+          } else if (index == 2) {
+            _navigateToFavorites();
+          } else if (index == 3) {
+            _navigateToNearby();
+          } else if (index == 4) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Profile feature coming soon!'),
+                duration: Duration(seconds: 1),
+                backgroundColor: Color(0xFF007BF6),
+              ),
+            );
+          }
+        },
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color(0xFF007BF6),
+        unselectedItemColor: const Color(0xFF94A3B8),
+        selectedFontSize: 11,
+        unselectedFontSize: 11,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+        elevation: 0,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.compare_arrows_rounded), label: 'Compare'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite_border_rounded), activeIcon: Icon(Icons.favorite_rounded), label: 'Favorites'),
+          BottomNavigationBarItem(icon: Icon(Icons.storefront_rounded), label: 'Nearby'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), activeIcon: Icon(Icons.person_rounded), label: 'Profile'),
+        ],
       ),
     );
   }

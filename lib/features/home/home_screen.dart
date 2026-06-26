@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../category/category_screen.dart';
 import '../compare/compare_screen.dart';
+import '../favorites/favorites_screen.dart';
+import '../nearby/nearby_screen.dart';
+import '../promotions/promotions_screen.dart';
+import '../cart/cart_screen.dart';
 import '../detail/product_detail_screen.dart';
 import '../search/search_delegate.dart';
 import '../data/product_data.dart';
@@ -15,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // GLOBAL KEY FOR DRAWER
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   
   int _currentBottomIndex = 0;
@@ -24,12 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isDarkMode = false;
   bool _isCategoriesExpanded = false;
   
-  // Auto-scrolling Banner Engine
   final PageController _bannerPageController = PageController(initialPage: 0);
   int _currentBannerIndex = 0;
   Timer? _bannerTimer;
 
-  // Banner Configurations
   final List<Map<String, dynamic>> _bannerConfigs = [
     {
       'tag': 'LIMITED OFFER',
@@ -66,13 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
-  // Heart states
   final Map<int, bool> _favoritedDeals = {};
-  
-  // Cart states
-  final Map<int, bool> _cartItems = {};
 
-  // Quick Actions
   final List<Map<String, dynamic>> _quickActions = [
     {'title': 'Compare Phones', 'desc': 'Side-by-side specs', 'icon': Icons.compare_arrows_rounded, 'color': 0xFF007BF6},
     {'title': 'Track Repair', 'desc': 'Check device status', 'icon': Icons.build_circle_outlined, 'color': 0xFF10B981},
@@ -80,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
     {'title': 'Promotions', 'desc': 'Active coupon club', 'icon': Icons.local_offer_outlined, 'color': 0xFFEF4444},
   ];
 
-  // ========== CATEGORIES ==========
   final List<Map<String, dynamic>> _categories = [
     {'name': 'Smartphones', 'icon': Icons.phone_android_rounded, 'count': '44 Models'},
     {'name': 'Tablets', 'icon': Icons.tablet_mac_rounded, 'count': '20 Models'},
@@ -88,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Accessories', 'icon': Icons.headphones_rounded, 'count': '26 Models'},
   ];
 
-  // ========== BRANDS ==========
   final List<Map<String, dynamic>> _brands = [
     {'name': 'Apple', 'iconPath': 'assets/images/brands/apple.svg'},
     {'name': 'Samsung', 'iconPath': 'assets/images/brands/samsung.svg'},
@@ -98,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Vivo', 'iconPath': 'assets/images/brands/vivo.svg'},
   ];
 
-  // ========== NEW ARRIVALS ==========
   final List<Map<String, dynamic>> _newArrivals = [
     {'id': 1, 'name': 'iPhone 17 Pro Max', 'price': '\$1399', 'tag': 'Apple', 'img': 'assets/images/ip17promax.png', 'rating': '4.9'},
     {'id': 31, 'name': 'Galaxy S26 Ultra', 'price': '\$1399', 'tag': 'Samsung', 'img': 'assets/images/s26_ultra.png', 'rating': '4.9'},
@@ -106,42 +99,12 @@ class _HomeScreenState extends State<HomeScreen> {
     {'id': 119, 'name': 'Vivo X100 Ultra', 'price': '\$1099', 'tag': 'Vivo', 'img': 'assets/images/vivo_x100_ultra.png', 'rating': '4.5'},
   ];
 
-  // ========== BEST DEALS ==========
   final List<Map<String, dynamic>> _bestDeals = [
     {'id': 1, 'name': 'iPhone 17 Pro Max', 'price': '\$1399', 'oldPrice': '\$1646', 'discount': '-15%', 'img': 'assets/images/ip17promax.png'},
     {'id': 31, 'name': 'Galaxy S26 Ultra', 'price': '\$1399', 'oldPrice': '\$1646', 'discount': '-15%', 'img': 'assets/images/s26_ultra.png'},
     {'id': 108, 'name': 'OnePlus 12', 'price': '\$899', 'oldPrice': '\$1058', 'discount': '-15%', 'img': 'assets/images/oneplus12.png'},
     {'id': 119, 'name': 'Vivo X100 Ultra', 'price': '\$1099', 'oldPrice': '\$1293', 'discount': '-15%', 'img': 'assets/images/vivo_x100_ultra.png'},
   ];
-
-  // ==================== ADD TO CART ====================
-  void _addToCart(Map<String, dynamic> product) {
-    final int productId = product['id'] as int;
-    setState(() {
-      _cartItems[productId] = true;
-    });
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                '${product['name']} added to cart 🛒',
-                style: const TextStyle(fontSize: 13),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFF10B981),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
 
   @override
   void initState() {
@@ -169,13 +132,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ==================== NAVIGATION METHODS ====================
+  
   void _navigateToCategory(String categoryName) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CategoryScreen(
           categoryName: categoryName,
-          subCategory: null,
+          initialFilter: 'All',
         ),
       ),
     );
@@ -187,7 +151,6 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(
         builder: (context) => CategoryScreen(
           categoryName: brandName,
-          subCategory: null,
           initialFilter: brandName,
         ),
       ),
@@ -200,7 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(
         builder: (context) => CategoryScreen(
           categoryName: 'New Arrivals',
-          subCategory: null,
           initialFilter: 'All',
         ),
       ),
@@ -213,10 +175,53 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(
         builder: (context) => CategoryScreen(
           categoryName: 'Best Deals',
-          subCategory: null,
           initialFilter: 'All',
         ),
       ),
+    );
+  }
+
+  void _navigateToProductDetail(Map<String, dynamic> product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductDetailScreen(product: product),
+      ),
+    );
+  }
+
+  void _navigateToCompare() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CompareScreen()),
+    );
+  }
+
+  void _navigateToFavorites() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+    );
+  }
+
+  void _navigateToNearby() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NearbyScreen()),
+    );
+  }
+
+  void _navigateToCart() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CartScreen()),
+    );
+  }
+
+  void _navigateToPromotions() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PromotionsScreen()),
     );
   }
 
@@ -232,63 +237,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _toggleCategories() {
-    setState(() {
-      _isCategoriesExpanded = !_isCategoriesExpanded;
-    });
+    setState(() { _isCategoriesExpanded = !_isCategoriesExpanded; });
   }
 
-  // ==================== COMPARE NAVIGATION ====================
-  void _navigateToCompare() {
-    setState(() {
-      _currentBottomIndex = 1;
-    });
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const CompareScreen(),
-      ),
-    ).then((_) {
-      if (mounted) {
-        setState(() {
-          _currentBottomIndex = 0;
-        });
-      }
-    });
-  }
-
-  // ==================== FAVORITES NAVIGATION ====================
-  void _navigateToFavorites() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Favorites feature coming soon! 📱'),
-        duration: Duration(seconds: 2),
-        backgroundColor: Color(0xFF007BF6),
-      ),
-    );
-  }
-
-  // ==================== PRODUCT DETAIL NAVIGATION ====================
-  void _navigateToProductDetail(Map<String, dynamic> product) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProductDetailScreen(product: product),
-      ),
-    );
-  }
-
-  // ==================== BANNER BUTTON NAVIGATION ====================
   void _handleBannerButtonTap(Map<String, dynamic> config) {
     final target = config['navigationTarget'] as String;
-    
-    if (target == 'Best Deals') {
-      _navigateToBestDeals();
-    } else if (target == 'New Arrivals') {
-      _navigateToNewArrivals();
-    } else if (target == 'Smartphones' || 
-               target == 'Tablets' || 
-               target == 'Wearables' || 
-               target == 'Accessories') {
+    if (target == 'Best Deals') _navigateToBestDeals();
+    else if (target == 'New Arrivals') _navigateToNewArrivals();
+    else if (target == 'Smartphones' || target == 'Tablets' || target == 'Wearables' || target == 'Accessories') {
       _navigateToCategory(target);
     } else {
       _navigateToBrand(target);
@@ -308,60 +264,37 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            
-            // 1. Hero Banner Slider
             _buildPremiumHeroBannerSlider(),
             const SizedBox(height: 28),
-
-            // 2. Quick Actions
             _buildSectionHeader('Quick Links', showSeeAll: false),
             const SizedBox(height: 12),
             _buildQuickActionsDeck(),
             const SizedBox(height: 28),
-
             _buildSectionDivider(),
-
-            // 3. Shop by Category
             _buildSectionHeader('Shop By Category', showSeeAll: false),
             const SizedBox(height: 12),
             _buildCategoryTilesGrid(),
             const SizedBox(height: 28),
-
             _buildSectionDivider(),
-
-            // 4. Popular Brands
             _buildSectionHeader('Popular Brands', showSeeAll: false),
             const SizedBox(height: 12),
             _buildBrandsStrip(),
             const SizedBox(height: 28),
-
             _buildSectionDivider(),
-
-            // 5. New Arrivals - ALL CLICKABLE
             _buildSectionHeader('New Arrivals', onSeeAllPressed: _navigateToNewArrivals),
             const SizedBox(height: 12),
             _buildNewArrivalsHorizontalList(),
             const SizedBox(height: 28),
-
             _buildSectionDivider(),
-
-            // 6. Best Deals - ALL CLICKABLE
             _buildSectionHeader('🔥 Best Deals', onSeeAllPressed: _navigateToBestDeals),
             const SizedBox(height: 12),
             _buildBestDealsVerticalSection(),
             const SizedBox(height: 28),
-
             _buildSectionDivider(),
-
-            // 7. Compare Promo Card
             _buildCompareMarketingPromoCard(),
             const SizedBox(height: 28),
-
-            // 8. Store Availability
             _buildStoreAvailabilityWidget(),
             const SizedBox(height: 28),
-
-            // 9. Repair Service
             _buildRepairServiceCard(),
             const SizedBox(height: 36),
           ],
@@ -437,9 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            
             const SizedBox(height: 8),
-
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -448,38 +379,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.fromLTRB(20, 12, 16, 8),
                     child: Text('MAIN', style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
                   ),
-                  
                   _buildExpandableCategories(),
-                  
                   _buildDrawerItem(
                     icon: Icons.compare_arrows_rounded,
                     title: 'Compare',
                     subtitle: 'Compare phones side-by-side',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _navigateToCompare();
-                    },
+                    onTap: () { Navigator.pop(context); _navigateToCompare(); },
                   ),
-                  
                   _buildDrawerItem(
                     icon: Icons.favorite_rounded,
                     title: 'Favorites',
                     subtitle: 'Your saved items',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _navigateToFavorites();
-                    },
+                    onTap: () { Navigator.pop(context); _navigateToFavorites(); },
                   ),
-                  
                   _buildDrawerItem(
                     icon: Icons.local_offer_rounded,
                     title: 'Promotions',
                     subtitle: 'Active deals & coupons',
-                    onTap: () => _navigateToDrawerItem('Promotions'),
+                    onTap: () { Navigator.pop(context); _navigateToPromotions(); },
                   ),
-                  
+                  _buildDrawerItem(
+                    icon: Icons.shopping_bag_rounded,
+                    title: 'Cart',
+                    subtitle: 'View your cart',
+                    onTap: () { Navigator.pop(context); _navigateToCart(); },
+                  ),
                   const Divider(height: 24, thickness: 1, indent: 16, endIndent: 16),
-                  
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 16, 8),
                     child: Text('SUPPORT', style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
@@ -494,7 +419,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icons.storefront_rounded,
                     title: 'Store Branches',
                     subtitle: 'Find nearby stores',
-                    onTap: () => _navigateToDrawerItem('Store Branches'),
+                    onTap: () { Navigator.pop(context); _navigateToNearby(); },
                   ),
                   _buildDrawerItem(
                     icon: Icons.headset_mic_rounded,
@@ -502,9 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     subtitle: '24/7 live chat',
                     onTap: () => _navigateToDrawerItem('Customer Support'),
                   ),
-                  
                   const Divider(height: 24, thickness: 1, indent: 16, endIndent: 16),
-                  
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 16, 8),
                     child: Text('SETTINGS', style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
@@ -515,7 +438,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     subtitle: 'App preferences',
                     onTap: () => _navigateToDrawerItem('Settings'),
                   ),
-                  
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -540,22 +462,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       trailing: Switch(
                         value: _isDarkMode,
-                        onChanged: (value) {
-                          setState(() { _isDarkMode = value; });
-                        },
+                        onChanged: (value) { setState(() { _isDarkMode = value; }); },
                         activeColor: const Color(0xFF007BF6),
                         inactiveThumbColor: Colors.grey.shade400,
                         inactiveTrackColor: Colors.grey.shade200,
                       ),
-                      onTap: () {
-                        setState(() { _isDarkMode = !_isDarkMode; });
-                      },
+                      onTap: () { setState(() { _isDarkMode = !_isDarkMode; }); },
                     ),
                   ),
                 ],
               ),
             ),
-            
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade200))),
@@ -606,9 +523,7 @@ class _HomeScreenState extends State<HomeScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             decoration: BoxDecoration(
-              color: _isCategoriesExpanded 
-                  ? const Color(0xFF007BF6).withOpacity(0.08) 
-                  : Colors.transparent,
+              color: _isCategoriesExpanded ? const Color(0xFF007BF6).withOpacity(0.08) : Colors.transparent,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -628,18 +543,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       const Text(
                         'Categories',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF0F172A),
-                        ),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF0F172A)),
                       ),
                       Text(
                         'Browse all products',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                       ),
                     ],
                   ),
@@ -672,9 +580,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }).toList(),
             ),
           ),
-          crossFadeState: _isCategoriesExpanded 
-              ? CrossFadeState.showSecond 
-              : CrossFadeState.showFirst,
+          crossFadeState: _isCategoriesExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 300),
           firstCurve: Curves.easeIn,
           secondCurve: Curves.easeOut,
@@ -689,45 +595,22 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Colors.grey.shade200, width: 0.5),
-          ),
+          border: Border(bottom: BorderSide(color: Colors.grey.shade200, width: 0.5)),
         ),
         child: Row(
           children: [
-            Icon(
-              category['icon'],
-              color: const Color(0xFF007BF6),
-              size: 18,
-            ),
+            Icon(category['icon'], color: const Color(0xFF007BF6), size: 18),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    category['name'],
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF0F172A),
-                    ),
-                  ),
-                  Text(
-                    category['count'],
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
+                  Text(category['name'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF0F172A))),
+                  Text(category['count'], style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
                 ],
               ),
             ),
-            const Icon(
-              Icons.chevron_right_rounded,
-              color: Color(0xFF94A3B8),
-              size: 20,
-            ),
+            const Icon(Icons.chevron_right_rounded, color: Color(0xFF94A3B8), size: 20),
           ],
         ),
       ),
@@ -761,9 +644,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             showSearch(
               context: context,
-              delegate: ProductSearchDelegate(
-                allProducts: ProductData.allProducts,
-              ),
+              delegate: ProductSearchDelegate(allProducts: ProductData.allProducts),
             );
           },
         ),
@@ -771,7 +652,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             IconButton(
               icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF0F172A), size: 24),
-              onPressed: () {},
+              onPressed: _navigateToCart, // ✅ FIXED: Now navigates to cart
             ),
             Positioned(
               right: 6,
@@ -779,10 +660,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 padding: const EdgeInsets.all(3),
                 decoration: const BoxDecoration(color: Color(0xFFFF3B30), shape: BoxShape.circle),
-                child: Text(
-                  '${_cartItems.values.where((v) => v).length}',
-                  style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
-                ),
+                child: const Text('0', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -956,6 +834,10 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               if (act['title'] == 'Compare Phones') {
                 _navigateToCompare();
+              } else if (act['title'] == 'Promotions') {
+                _navigateToPromotions();
+              } else if (act['title'] == 'Reserve Device') {
+                _navigateToNearby();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -1027,15 +909,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return InkWell(
             onTap: () {
               setState(() { _selectedCategoryIndex = index; });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CategoryScreen(
-                    categoryName: cat['name'],
-                    subCategory: null,
-                  ),
-                ),
-              );
+              _navigateToCategory(cat['name']);
             },
             borderRadius: BorderRadius.circular(16),
             child: AnimatedContainer(
@@ -1102,12 +976,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   color: isSelected ? const Color(0xFF0F172A) : Colors.white,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: isSelected ? Colors.transparent : const Color(0xFFE2E8F0),
-                  ),
-                  boxShadow: isSelected
-                      ? [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 8)]
-                      : [],
+                  border: Border.all(color: isSelected ? Colors.transparent : const Color(0xFFE2E8F0)),
+                  boxShadow: isSelected ? [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 8)] : [],
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -1140,7 +1010,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==================== NEW ARRIVALS - ALL CLICKABLE ====================
+  // ==================== NEW ARRIVALS ====================
   Widget _buildNewArrivalsHorizontalList() {
     return SizedBox(
       height: 255,
@@ -1153,7 +1023,6 @@ class _HomeScreenState extends State<HomeScreen> {
           final item = _newArrivals[index];
           final int itemId = item['id'] as int;
           bool isFav = _favoritedDeals[itemId] ?? false;
-          bool isInCart = _cartItems[itemId] ?? false;
 
           return GestureDetector(
             onTap: () => _navigateToProductDetail(item),
@@ -1193,14 +1062,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: const Color(0xFF10B981),
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              child: const Text(
-                                'NEW',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              child: const Text('NEW', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
                             ),
                           ),
                           Positioned(
@@ -1243,40 +1105,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(item['price'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 15, color: Color(0xFF0F172A))),
-                        GestureDetector(
-                          onTap: () {
-                            if (!isInCart) {
-                              _addToCart(item);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Already in cart! 🛒'),
-                                  duration: Duration(seconds: 1),
-                                  backgroundColor: Colors.orange,
-                                ),
-                              );
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: (isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6)).withOpacity(0.3),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              isInCart ? Icons.check_rounded : Icons.add_rounded,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(color: Color(0xFF007BF6), shape: BoxShape.circle),
+                          child: const Icon(Icons.add_rounded, color: Colors.white, size: 16),
+                        )
                       ],
                     )
                   ],
@@ -1289,7 +1122,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==================== BEST DEALS - ALL CLICKABLE ====================
+  // ==================== BEST DEALS ====================
   Widget _buildBestDealsVerticalSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1301,7 +1134,6 @@ class _HomeScreenState extends State<HomeScreen> {
           final item = _bestDeals[index];
           final int id = item['id'] as int;
           bool isFav = _favoritedDeals[id] ?? false;
-          bool isInCart = _cartItems[id] ?? false;
 
           return GestureDetector(
             onTap: () => _navigateToProductDetail(item),
@@ -1339,11 +1171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: Text(
                               item['discount'],
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 8,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -1361,10 +1189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: const Color(0xFFFF3B30).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Text(
-                            'BEST DEAL',
-                            style: TextStyle(color: Color(0xFFFF3B30), fontSize: 9, fontWeight: FontWeight.bold),
-                          ),
+                          child: const Text('BEST DEAL', style: TextStyle(color: Color(0xFFFF3B30), fontSize: 9, fontWeight: FontWeight.bold)),
                         ),
                         const SizedBox(height: 6),
                         Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF0F172A))),
@@ -1379,47 +1204,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: isFav ? const Color(0xFFFF3B30) : const Color(0xFF94A3B8), size: 24),
-                        onPressed: () { setState(() { _favoritedDeals[id] = !isFav; }); },
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          if (!isInCart) {
-                            _addToCart(item);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Already in cart! 🛒'),
-                                duration: Duration(seconds: 1),
-                                backgroundColor: Colors.orange,
-                              ),
-                            );
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: (isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6)).withOpacity(0.3),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            isInCart ? Icons.check_rounded : Icons.add_rounded,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                        ),
-                      ),
-                    ],
+                  IconButton(
+                    icon: Icon(isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: isFav ? const Color(0xFFFF3B30) : const Color(0xFF94A3B8), size: 24),
+                    onPressed: () { setState(() { _favoritedDeals[id] = !isFav; }); },
                   )
                 ],
               ),
@@ -1515,7 +1302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               OutlinedButton(
-                onPressed: () {},
+                onPressed: _navigateToNearby,
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFFE2E8F0)),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -1552,7 +1339,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: _navigateToNearby,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF007BF6),
               foregroundColor: Colors.white,
@@ -1576,17 +1363,25 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: BottomNavigationBar(
         currentIndex: _currentBottomIndex,
-        onTap: (index) { 
-          setState(() { 
-            _currentBottomIndex = index;
-            if (index == 0) {
-              // Already on home
-            } else if (index == 1) {
-              _navigateToCompare();
-            } else if (index == 2) {
-              _navigateToFavorites();
-            }
-          }); 
+        onTap: (index) {
+          setState(() { _currentBottomIndex = index; });
+          if (index == 0) {
+            // Already on home
+          } else if (index == 1) {
+            _navigateToCompare();
+          } else if (index == 2) {
+            _navigateToFavorites();
+          } else if (index == 3) {
+            _navigateToNearby();
+          } else if (index == 4) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Profile feature coming soon!'),
+                duration: Duration(seconds: 1),
+                backgroundColor: Color(0xFF007BF6),
+              ),
+            );
+          }
         },
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
