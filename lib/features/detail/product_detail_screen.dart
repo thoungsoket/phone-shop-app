@@ -18,69 +18,67 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool _isFavorited = false;
   int _selectedImageIndex = 0;
 
-  // ========== APPLE SMARTPHONES - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== APPLE SMARTPHONES ==========
   final Map<String, List<Map<String, dynamic>>> _appleColorVariants = {
     'iPhone 17 Pro Max': [
-      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone17_promax_natural.png'},
-      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone17_promax_black.png'},
-      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone17_promax_white.png'},
-      {'name': 'Gold', 'color': Color(0xFFD4AF37), 'image': 'assets/images/iphone17_promax_gold.png'},
+      {'name': 'Orange', 'color': Color(0xFFFF6B35), 'image': 'assets/images/iphone17_promax_orange.png'},
+      {'name': 'Deep Blue', 'color': Color(0xFF003366), 'image': 'assets/images/iphone17_promax_deep_blue.png'},
+      {'name': 'Silver', 'color': Color(0xFFE8E8E8), 'image': 'assets/images/iphone17_promax_silver.png'},
     ],
     'iPhone 17 Pro': [
-      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone17_pro_black.png'},
-      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone17_pro_natural.png'},
-      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone17_pro_white.png'},
-      {'name': 'Gold', 'color': Color(0xFFD4AF37), 'image': 'assets/images/iphone17_pro_gold.png'},
+      {'name': 'Deep Blue', 'color': Color(0xFF003366), 'image': 'assets/images/iphone17_pro_deep_blue.png'},
+      {'name': 'Orange', 'color': Color(0xFFFF6B35), 'image': 'assets/images/iphone17_pro_orange.png'},
+      {'name': 'Silver', 'color': Color(0xFFE8E8E8), 'image': 'assets/images/iphone17_pro_silver.png'},
     ],
     'iPhone 17': [
-      {'name': 'Midnight', 'color': Color(0xFF1A1A2E), 'image': 'assets/images/iphone17_midnight.png'},
+      {'name': 'Lavender', 'color': Color(0xFFB6A1D9), 'image': 'assets/images/iphone17_lavender.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/iphone17_black.png'},
-      {'name': 'Starlight', 'color': Color(0xFFF5F5DC), 'image': 'assets/images/iphone17_starlight.png'},
-      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/iphone17_blue.png'},
-      {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/iphone17_pink.png'},
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/iphone17_white.png'},
+      {'name': 'Mist Blue', 'color': Color(0xFFB8D4E3), 'image': 'assets/images/iphone17_mist_blue.png'},
+      {'name': 'Sage', 'color': Color(0xFF9CAF88), 'image': 'assets/images/iphone17_sage.png'},
     ],
     'iPhone 16 Pro Max': [
-      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone16_promax_natural.png'},
-      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone16_promax_black.png'},
-      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone16_promax_white.png'},
-      {'name': 'Gold', 'color': Color(0xFFD4AF37), 'image': 'assets/images/iphone16_promax_gold.png'},
+      {'name': 'Desert Titanium', 'color': Color(0xFFC4A87C), 'image': 'assets/images/iphone16_promax_desert_titanium.png'},
+      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone16_promax_black_titanium.png'},
+      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone16_promax_natural_titanium.png'},
+      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone16_promax_white_titanium.png'},
     ],
     'iPhone 16 Pro': [
-      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone16_pro_black.png'},
-      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone16_pro_natural.png'},
-      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone16_pro_white.png'},
-      {'name': 'Gold', 'color': Color(0xFFD4AF37), 'image': 'assets/images/iphone16_pro_gold.png'},
+      {'name': 'Desert Titanium', 'color': Color(0xFFC4A87C), 'image': 'assets/images/iphone16_pro_desert_titanium.png'},
+      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone16_pro_black_titanium.png'},
+      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone16_pro_natural_titanium.png'},
+      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone16_pro_white_titanium.png'},
     ],
     'iPhone 16 Plus': [
-      {'name': 'Midnight', 'color': Color(0xFF1A1A2E), 'image': 'assets/images/iphone16_plus_midnight.png'},
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/iphone16_plus_white.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/iphone16_plus_black.png'},
-      {'name': 'Starlight', 'color': Color(0xFFF5F5DC), 'image': 'assets/images/iphone16_plus_starlight.png'},
-      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/iphone16_plus_blue.png'},
+      {'name': 'Teal', 'color': Color(0xFF008080), 'image': 'assets/images/iphone16_plus_teal.png'},
+      {'name': 'Ultramarine', 'color': Color(0xFF120A8F), 'image': 'assets/images/iphone16_plus_ultramarine.png'},
       {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/iphone16_plus_pink.png'},
     ],
     'iPhone 16': [
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/iphone16_black.png'},
-      {'name': 'Midnight', 'color': Color(0xFF1A1A2E), 'image': 'assets/images/iphone16_midnight.png'},
-      {'name': 'Starlight', 'color': Color(0xFFF5F5DC), 'image': 'assets/images/iphone16_starlight.png'},
-      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/iphone16_blue.png'},
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/iphone16_white.png'},
+      {'name': 'Ultramarine', 'color': Color(0xFF120A8F), 'image': 'assets/images/iphone16_ultramarine.png'},
+      {'name': 'Teal', 'color': Color(0xFF008080), 'image': 'assets/images/iphone16_teal.png'},
       {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/iphone16_pink.png'},
     ],
     'iPhone 15 Pro Max': [
-      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone15_promax_natural.png'},
-      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone15_promax_black.png'},
-      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone15_promax_white.png'},
-      {'name': 'Gold', 'color': Color(0xFFD4AF37), 'image': 'assets/images/iphone15_promax_gold.png'},
+      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone15_promax_natural_titanium.png'},
+      {'name': 'Blue Titanium', 'color': Color(0xFF4A6FA5), 'image': 'assets/images/iphone15_promax_blue_titanium.png'},
+      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone15_promax_white_titanium.png'},
+      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone15_promax_black_titanium.png'},
     ],
     'iPhone 15 Pro': [
-      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone15_pro_black.png'},
-      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone15_pro_natural.png'},
-      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone15_pro_white.png'},
-      {'name': 'Gold', 'color': Color(0xFFD4AF37), 'image': 'assets/images/iphone15_pro_gold.png'},
+      {'name': 'Black Titanium', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/iphone15_pro_black_titanium.png'},
+      {'name': 'Natural Titanium', 'color': Color(0xFFBFBFBF), 'image': 'assets/images/iphone15_pro_natural_titanium.png'},
+      {'name': 'White Titanium', 'color': Color(0xFFF5F5F5), 'image': 'assets/images/iphone15_pro_white_titanium.png'},
+      {'name': 'Blue Titanium', 'color': Color(0xFF4A6FA5), 'image': 'assets/images/iphone15_pro_blue_titanium.png'},
     ],
     'iPhone 15': [
-      {'name': 'Midnight', 'color': Color(0xFF1A1A2E), 'image': 'assets/images/iphone15_midnight.png'},
+      {'name': 'Yellow', 'color': Color(0xFFFFD700), 'image': 'assets/images/iphone15_yellow.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/iphone15_black.png'},
-      {'name': 'Starlight', 'color': Color(0xFFF5F5DC), 'image': 'assets/images/iphone15_starlight.png'},
+      {'name': 'Green', 'color': Color(0xFF00A86B), 'image': 'assets/images/iphone15_green.png'},
       {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/iphone15_blue.png'},
       {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/iphone15_pink.png'},
     ],
@@ -89,7 +87,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/iphonexr_white.png'},
       {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/iphonexr_blue.png'},
       {'name': 'Red', 'color': Color(0xFFFF3B30), 'image': 'assets/images/iphonexr_red.png'},
-      {'name': 'Yellow', 'color': Color(0xFFFFCC00), 'image': 'assets/images/iphonexr_yellow.png'},
     ],
     'iPhone XS Max': [
       {'name': 'Gold', 'color': Color(0xFFD4AF37), 'image': 'assets/images/iphonexsmax_gold.png'},
@@ -98,7 +95,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
   };
 
-  // ========== SAMSUNG SMARTPHONES - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== SAMSUNG SMARTPHONES ==========
   final Map<String, List<Map<String, dynamic>>> _samsungColorVariants = {
     'Galaxy S26 Ultra': [
       {'name': 'Titanium Black', 'color': Color(0xFF1A1A1A), 'image': 'assets/images/s26_ultra_black.png'},
@@ -106,7 +103,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       {'name': 'Titanium White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/s26_ultra_white.png'},
     ],
     'Galaxy S26 Plus': [
-      {'name': 'Mint', 'color': Color(0xFF98FF98), 'image': 'assets/images/s26_plus_mint.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/s26_plus_black.png'},
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/s26_plus_white.png'},
     ],
@@ -129,7 +125,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
     'Galaxy Z Flip 6': [
       {'name': 'Light Blue', 'color': Color(0xFF87CEEB), 'image': 'assets/images/zflip6_blue.png'},
-      {'name': 'Cream', 'color': Color(0xFFFFFDD0), 'image': 'assets/images/zflip6_cream.png'},
+      {'name': 'Yellow', 'color': Color(0xFFFFD700), 'image': 'assets/images/zflip6_yellow.png'},
     ],
     'Galaxy A55 5G': [
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/a55_5g_white.png'},
@@ -146,19 +142,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
     'Galaxy S25 Plus': [
       {'name': 'Mint', 'color': Color(0xFF98FF98), 'image': 'assets/images/s25_plus_mint.png'},
-      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/s25_plus_white.png'},
+      {'name': 'Navy', 'color': Color(0xFF000080), 'image': 'assets/images/s25_plus_navy.png'},
     ],
   };
 
-  // ========== XIAOMI SMARTPHONES - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== XIAOMI SMARTPHONES ==========
   final Map<String, List<Map<String, dynamic>>> _xiaomiColorVariants = {
     'Xiaomi 15 Pro': [
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/xiaomi15_pro_silver.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/xiaomi15_pro_black.png'},
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/xiaomi15_pro_white.png'},
     ],
     'Xiaomi 15': [
-      {'name': 'Mint', 'color': Color(0xFF98FF98), 'image': 'assets/images/xiaomi15_mint.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/xiaomi15_black.png'},
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/xiaomi15_white.png'},
     ],
@@ -175,7 +169,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/xiaomi14t_pro_black.png'},
     ],
     'Xiaomi 13T Pro': [
-      {'name': 'Mint', 'color': Color(0xFF98FF98), 'image': 'assets/images/xiaomi13t_pro_mint.png'},
+      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/xiaomi13t_pro_blue.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/xiaomi13t_pro_black.png'},
     ],
     'Xiaomi 13': [
@@ -184,10 +178,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
     'Xiaomi 12 Pro': [
       {'name': 'Light Blue', 'color': Color(0xFF87CEEB), 'image': 'assets/images/xiaomi12_pro_blue.png'},
-      {'name': 'Gray', 'color': Color(0xFF808080), 'image': 'assets/images/xiaomi12_pro_gray.png'},
+      {'name': 'Purple', 'color': Color(0xFF800080), 'image': 'assets/images/xiaomi12_pro_purple.png'},
     ],
     'Xiaomi 12': [
-      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/xiaomi12_black.png'},
+      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/xiaomi12_blue.png'},
       {'name': 'Gray', 'color': Color(0xFF808080), 'image': 'assets/images/xiaomi12_gray.png'},
     ],
     'Xiaomi Poco F6': [
@@ -196,12 +190,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
   };
 
-  // ========== OPPO SMARTPHONES - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== OPPO SMARTPHONES ==========
   final Map<String, List<Map<String, dynamic>>> _oppoColorVariants = {
     'Oppo Find X8 Ultra': [
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/findx8_ultra_white.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/findx8_ultra_black.png'},
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/findx8_ultra_silver.png'},
+      {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/findx8_ultra_pink.png'},
     ],
     'Oppo Find X8 Pro': [
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/findx8_pro_black.png'},
@@ -213,15 +207,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
     'Oppo Find X7 Ultra': [
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/findx7_ultra_black.png'},
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/findx7_ultra_silver.png'},
+      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/findx7_ultra_blue.png'},
     ],
     'Oppo Find X7': [
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/findx7_silver.png'},
-      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/findx7_black.png'},
+      {'name': 'Purple', 'color': Color(0xFF800080), 'image': 'assets/images/findx7_purple.png'},
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/findx7_white.png'},
     ],
     'Oppo Reno 13 Pro': [
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/reno13_pro_white.png'},
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/reno13_pro_silver.png'},
+      {'name': 'Gray', 'color': Color(0xFF808080), 'image': 'assets/images/reno13_pro_gray.png'},
     ],
     'Oppo Reno 13': [
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/reno13_white.png'},
@@ -241,7 +235,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
   };
 
-  // ========== ONEPLUS SMARTPHONES - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== ONEPLUS SMARTPHONES ==========
   final Map<String, List<Map<String, dynamic>>> _oneplusColorVariants = {
     'OnePlus 12': [
       {'name': 'Flowy Emerald', 'color': Color(0xFF50C878), 'image': 'assets/images/oneplus12_emerald.png'},
@@ -262,15 +256,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
     'OnePlus Nord 3': [
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/nord3_black.png'},
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/nord3_silver.png'},
+      {'name': 'Green', 'color': Color(0xFF00A86B), 'image': 'assets/images/nord3_green.png'},
     ],
     'OnePlus Open': [
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/oneplus_open_black.png'},
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/oneplus_open_silver.png'},
+      {'name': 'Green', 'color': Color(0xFF00A86B), 'image': 'assets/images/oneplus_open_green.png'},
     ],
   };
 
-  // ========== VIVO SMARTPHONES - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== VIVO SMARTPHONES ==========
   final Map<String, List<Map<String, dynamic>>> _vivoColorVariants = {
     'Vivo X100 Ultra': [
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/vivo_x100_ultra_white.png'},
@@ -287,28 +281,44 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ],
     'Vivo V40 Pro': [
       {'name': 'Grey', 'color': Color(0xFF808080), 'image': 'assets/images/vivo_v40_pro_grey.png'},
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/vivo_v40_pro_silver.png'},
+      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/vivo_v40_pro_blue.png'},
     ],
     'Vivo V40': [
       {'name': 'Purple', 'color': Color(0xFF800080), 'image': 'assets/images/vivo_v40_purple.png'},
-      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/vivo_v40_black.png'},
+      {'name': 'Gray', 'color': Color(0xFF808080), 'image': 'assets/images/vivo_v40_gray.png'},
     ],
   };
 
-  // ========== TABLETS - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== TABLETS ==========
   final Map<String, List<Map<String, dynamic>>> _tabletColorVariants = {
     'iPad Pro M4 13"': [
-      {'name': 'Space Gray', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/ipad_pro_m4_13_gray.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/ipad_pro_m4_13_black.png'},
       {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/ipad_pro_m4_13_silver.png'},
     ],
     'iPad Pro M4 11"': [
-      {'name': 'Space Gray', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/ipad_pro_m4_11_gray.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/ipad_pro_m4_11_black.png'},
       {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/ipad_pro_m4_11_silver.png'},
     ],
     'iPad Air M3': [
       {'name': 'Space Gray', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/ipad_air_m3_gray.png'},
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/ipad_air_m3_silver.png'},
+      {'name': 'Purple', 'color': Color(0xFF800080), 'image': 'assets/images/ipad_air_m3_purple.png'},
       {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/ipad_air_m3_blue.png'},
+    ],
+    'iPad 10th Gen': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/ipad_10th_silver.png'},
+      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/ipad_10th_blue.png'},
+      {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/ipad_10th_pink.png'},
+      {'name': 'Yellow', 'color': Color(0xFFFFD700), 'image': 'assets/images/ipad_10th_yellow.png'},
+    ],
+    'iPad Mini 7': [
+      {'name': 'Space Gray', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/ipad_mini7_gray.png'},
+      {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/ipad_mini7_blue.png'},
+      {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/ipad_mini7_pink.png'},
+      {'name': 'Purple', 'color': Color(0xFF800080), 'image': 'assets/images/ipad_mini7_purple.png'},
+    ],
+    'iPad 9th Gen': [
+      {'name': 'Space Gray', 'color': Color(0xFF2C2C2C), 'image': 'assets/images/ipad_9th_gray.png'},
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/ipad_9th_silver.png'},
     ],
     'Galaxy Tab S10 Ultra': [
       {'name': 'Titanium Black', 'color': Color(0xFF1A1A1A), 'image': 'assets/images/tab_s10_ultra_black.png'},
@@ -318,17 +328,61 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/tab_s10_plus_silver.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/tab_s10_plus_black.png'},
     ],
+    'Galaxy Tab S10': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/tab_s10_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/tab_s10_black.png'},
+    ],
+    'Galaxy Tab S9 FE': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/tab_s9_fe_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/tab_s9_fe_black.png'},
+    ],
+    'Galaxy Tab A9+': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/tab_a9_plus_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/tab_a9_plus_black.png'},
+    ],
+    'Galaxy Tab A9': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/tab_a9_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/tab_a9_black.png'},
+    ],
     'Xiaomi Pad 7 Pro': [
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/pad7_pro_silver.png'},
+      {'name': 'Green', 'color': Color(0xFF00A86B), 'image': 'assets/images/pad7_pro_green.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/pad7_pro_black.png'},
     ],
+    'Xiaomi Pad 7': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/pad7_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/pad7_black.png'},
+    ],
+    'Xiaomi Pad 6': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/pad6_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/pad6_black.png'},
+    ],
+    'Xiaomi Pad 6S Pro': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/pad6s_pro_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/pad6s_pro_black.png'},
+    ],
     'Oppo Pad 4 Pro': [
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/pad4_pro_silver.png'},
+      {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/pad4_pro_pink.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/pad4_pro_black.png'},
+    ],
+    'Oppo Pad 3 Pro': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/pad3_pro_silver.png'},
+      {'name': 'Gold', 'color': Color(0xFFD4AF37), 'image': 'assets/images/pad3_pro_gold.png'},
+    ],
+    'Oppo Pad 3': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/pad3_silver.png'},
+      {'name': 'Purple', 'color': Color(0xFF800080), 'image': 'assets/images/pad3_purple.png'},
+    ],
+    'OnePlus Pad 2': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/oneplus_pad2_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/oneplus_pad2_black.png'},
+    ],
+    'OnePlus Pad': [
+      {'name': 'Green', 'color': Color(0xFF00A86B), 'image': 'assets/images/oneplus_pad_green.png'},
+      {'name': 'Gray', 'color': Color(0xFF808080), 'image': 'assets/images/oneplus_pad_gray.png'},
     ],
   };
 
-  // ========== WEARABLES - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== WEARABLES ==========
   final Map<String, List<Map<String, dynamic>>> _wearableColorVariants = {
     'Apple Watch Ultra 3': [
       {'name': 'Titanium', 'color': Color(0xFF8C8C8C), 'image': 'assets/images/watch_ultra3_titanium.png'},
@@ -339,50 +393,188 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch_series10_black.png'},
       {'name': 'Rose Gold', 'color': Color(0xFFE8B4B8), 'image': 'assets/images/watch_series10_rosegold.png'},
     ],
+    'Apple Watch SE 3': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch_se3_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch_se3_black.png'},
+    ],
+    'Apple Watch Series 9': [
+      {'name': 'Aluminium', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch_series9_aluminium.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch_series9_black.png'},
+      {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/watch_series9_pink.png'},
+    ],
+    'Apple Watch Ultra 2': [
+      {'name': 'Titanium', 'color': Color(0xFF8C8C8C), 'image': 'assets/images/watch_ultra2_titanium.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch_ultra2_black.png'},
+    ],
     'Galaxy Watch 7 Ultra': [
       {'name': 'Titanium', 'color': Color(0xFF8C8C8C), 'image': 'assets/images/watch7_ultra_titanium.png'},
-      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch7_ultra_silver.png'},
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/watch7_ultra_white.png'},
     ],
     'Galaxy Watch 7': [
       {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch7_silver.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch7_black.png'},
     ],
+    'Galaxy Watch 7 Classic': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch7_classic_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch7_classic_black.png'},
+    ],
+    'Galaxy Watch FE': [
+      {'name': 'Light Blue', 'color': Color(0xFF87CEEB), 'image': 'assets/images/watch_fe_light_blue.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch_fe_black.png'},
+    ],
+    'Galaxy Watch 6': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch6_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch6_black.png'},
+    ],
+    'Galaxy Watch 6 Classic': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch6_classic_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch6_classic_black.png'},
+    ],
     'Xiaomi Watch 3 Pro': [
       {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch3_pro_silver.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch3_pro_black.png'},
+    ],
+    'Xiaomi Watch 2 Pro': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch2_pro_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch2_pro_black.png'},
+    ],
+    'Xiaomi Band 9': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/band9_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/band9_black.png'},
+    ],
+    'Xiaomi Band 8 Pro': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/band8_pro_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/band8_pro_black.png'},
+    ],
+    'Xiaomi Band 8': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/band8_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/band8_black.png'},
     ],
     'Oppo Watch 5 Pro': [
       {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch5_pro_silver.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch5_pro_black.png'},
     ],
+    'Oppo Watch 4 Pro': [
+      {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/watch4_pro_silver.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/watch4_pro_black.png'},
+    ],
+    'Oppo Band 3': [
+      {'name': 'Pink', 'color': Color(0xFFFFB6C1), 'image': 'assets/images/band3_pink.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/band3_black.png'},
+    ],
   };
 
-  // ========== ACCESSORIES - EACH COLOR HAS UNIQUE IMAGE ==========
+  // ========== ACCESSORIES ==========
   final Map<String, List<Map<String, dynamic>>> _accessoryColorVariants = {
     'AirPods Pro 3': [
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/airpods_pro3_white.png'},
-      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/airpods_pro3_black.png'},
     ],
     'AirPods Max 2': [
       {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/airpods_max2_silver.png'},
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/airpods_max2_black.png'},
       {'name': 'Blue', 'color': Color(0xFF007AFF), 'image': 'assets/images/airpods_max2_blue.png'},
     ],
+    'AirPods 4': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/airpods4_white.png'},
+    ],
+    'AirPods Pro 2': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/airpods_pro2_white.png'},
+    ],
+    'MagSafe Battery Pack': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/magsafe_battery_white.png'},
+    ],
+    'Apple Pencil Pro': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/pencil_pro_white.png'},
+    ],
+    'Magic Keyboard': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/magic_keyboard_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/magic_keyboard_black.png'},
+    ],
     'Galaxy Buds 3 Pro': [
       {'name': 'Silver', 'color': Color(0xFFC0C0C0), 'image': 'assets/images/buds3_pro_silver.png'},
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/buds3_pro_white.png'},
+    ],
+    'Galaxy Buds 3': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/buds3_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/buds3_black.png'},
+    ],
+    'Galaxy Buds 2 Pro': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/buds2_pro_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/buds2_pro_black.png'},
+    ],
+    'Galaxy S-Pen Pro': [
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/spen_pro_black.png'},
+    ],
+    'Galaxy Wireless Charger': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/wireless_charger_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/wireless_charger_black.png'},
+    ],
+    'Galaxy Smart Case': [
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/smart_case_black.png'},
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/smart_case_white.png'},
     ],
     'Xiaomi Buds 4 Pro': [
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/buds4_pro_black.png'},
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/buds4_pro_white.png'},
     ],
+    'Xiaomi Buds 4': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/buds4_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/buds4_black.png'},
+    ],
+    'Xiaomi Buds 3 Pro': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/buds3_pro_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/buds3_pro_black.png'},
+    ],
+    'Xiaomi Power Bank 3': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/power_bank3_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/power_bank3_black.png'},
+    ],
+    'Xiaomi 67W Charger': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/67w_charger_white.png'},
+    ],
+    'Xiaomi Smart Band Strap': [
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/band_strap_black.png'},
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/band_strap_white.png'},
+    ],
     'Oppo Enco X4': [
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/enco_x4_white.png'},
-      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/enco_x4_black.png'},
+    ],
+    'Oppo Enco X3': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/enco_x3_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/enco_x3_black.png'},
+    ],
+    'Oppo Enco Air 4': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/enco_air4_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/enco_air4_black.png'},
+    ],
+    'Oppo Enco Air 3': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/enco_air3_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/enco_air3_black.png'},
+    ],
+    'Oppo SuperVOOC Charger': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/supervooc_charger_white.png'},
     ],
     'OnePlus Buds Pro 3': [
       {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/oneplus_buds_pro3_black.png'},
       {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/oneplus_buds_pro3_white.png'},
+    ],
+    'OnePlus Buds 3': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/oneplus_buds3_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/oneplus_buds3_black.png'},
+    ],
+    'OnePlus Warp Charger': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/warp_charger_white.png'},
+    ],
+    'Vivo TWS 4': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/vivo_tws4_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/vivo_tws4_black.png'},
+    ],
+    'Vivo TWS 3': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/vivo_tws3_white.png'},
+      {'name': 'Black', 'color': Color(0xFF000000), 'image': 'assets/images/vivo_tws3_black.png'},
+    ],
+    'Vivo 80W Charger': [
+      {'name': 'White', 'color': Color(0xFFFFFFFF), 'image': 'assets/images/vivo_80w_charger_white.png'},
     ],
   };
 
@@ -405,93 +597,115 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final productName = widget.product['name']?.toString() ?? '';
     final category = widget.product['category']?.toString() ?? '';
 
+    List<Map<String, dynamic>>? variants;
+
     // Check Apple
     if (productName.contains('iPhone')) {
       for (final entry in _appleColorVariants.entries) {
-        if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+        if (productName.contains(entry.key)) {
+          variants = entry.value;
+          break;
         }
       }
-      for (final entry in _appleColorVariants.entries) {
-        if (productName.contains('iPhone') && entry.key.contains('iPhone')) {
-          return entry.value;
+      if (variants == null) {
+        for (final entry in _appleColorVariants.entries) {
+          if (entry.key.contains('iPhone') && productName.contains('iPhone')) {
+            variants = entry.value;
+            break;
+          }
         }
       }
     }
 
     // Check Samsung
-    if (productName.contains('Galaxy')) {
+    if (productName.contains('Galaxy') && variants == null) {
       for (final entry in _samsungColorVariants.entries) {
         if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+          variants = entry.value;
+          break;
         }
       }
     }
 
     // Check Xiaomi
-    if (productName.contains('Xiaomi')) {
+    if (productName.contains('Xiaomi') && variants == null) {
       for (final entry in _xiaomiColorVariants.entries) {
         if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+          variants = entry.value;
+          break;
         }
       }
     }
 
     // Check Oppo
-    if (productName.contains('Oppo') || productName.contains('Find') || productName.contains('Reno')) {
+    if ((productName.contains('Oppo') || productName.contains('Find') || productName.contains('Reno')) && variants == null) {
       for (final entry in _oppoColorVariants.entries) {
         if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+          variants = entry.value;
+          break;
         }
       }
     }
 
     // Check OnePlus
-    if (productName.contains('OnePlus')) {
+    if (productName.contains('OnePlus') && variants == null) {
       for (final entry in _oneplusColorVariants.entries) {
         if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+          variants = entry.value;
+          break;
         }
       }
     }
 
     // Check Vivo
-    if (productName.contains('Vivo')) {
+    if (productName.contains('Vivo') && variants == null) {
       for (final entry in _vivoColorVariants.entries) {
         if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+          variants = entry.value;
+          break;
         }
       }
     }
 
     // Check Tablets
-    if (category == 'Tablets' || productName.contains('Pad') || productName.contains('iPad') || productName.contains('Tab')) {
+    if ((category == 'Tablets' || productName.contains('Pad') || productName.contains('iPad') || productName.contains('Tab')) && variants == null) {
       for (final entry in _tabletColorVariants.entries) {
         if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+          variants = entry.value;
+          break;
+        }
+      }
+      if (variants == null && productName.contains('iPad')) {
+        for (final entry in _tabletColorVariants.entries) {
+          if (entry.key.contains('iPad')) {
+            variants = entry.value;
+            break;
+          }
         }
       }
     }
 
     // Check Wearables
-    if (category == 'Wearables' || productName.contains('Watch') || productName.contains('Band')) {
+    if ((category == 'Wearables' || productName.contains('Watch') || productName.contains('Band')) && variants == null) {
       for (final entry in _wearableColorVariants.entries) {
         if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+          variants = entry.value;
+          break;
         }
       }
     }
 
     // Check Accessories
-    if (category == 'Accessories' || productName.contains('Buds') || productName.contains('AirPods') || productName.contains('Charger')) {
+    if ((category == 'Accessories' || productName.contains('Buds') || productName.contains('AirPods') || productName.contains('Charger') || productName.contains('Enco') || productName.contains('Pencil') || productName.contains('Keyboard') || productName.contains('Case') || productName.contains('S-Pen') || productName.contains('Power Bank')) && variants == null) {
       for (final entry in _accessoryColorVariants.entries) {
         if (productName.contains(entry.key) || entry.key.contains(productName)) {
-          return entry.value;
+          variants = entry.value;
+          break;
         }
       }
     }
 
-    return _defaultColorVariants;
+    return variants ?? _defaultColorVariants;
   }
 
   // ========== HELPERS ==========
@@ -515,6 +729,1175 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
     return 4.5;
   }
+
+  // ========== GET PRODUCT SPECIFICATIONS ==========
+  List<Map<String, dynamic>> _getProductSpecs() {
+    final productName = widget.product['name']?.toString() ?? '';
+    final brand = widget.product['brand']?.toString() ?? '';
+    final category = widget.product['category']?.toString() ?? '';
+
+    // iPhone 17 Pro Max
+    if (productName == 'iPhone 17 Pro Max') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 17 Pro Max'},
+          {'label': 'Release Date', 'value': 'September 2026'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.9 inches'},
+          {'label': 'Resolution', 'value': '2796 x 1290 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2000 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A19 Pro Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '6-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Telephoto', 'value': '12MP'},
+          {'label': 'LiDAR Scanner', 'value': 'Yes'},
+          {'label': 'Video Recording', 'value': '8K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,685 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes (MagSafe)'},
+          {'label': 'Battery Life', 'value': 'Up to 29 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
+          {'label': 'Bluetooth', 'value': '5.4'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 17 Pro
+    if (productName == 'iPhone 17 Pro') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 17 Pro'},
+          {'label': 'Release Date', 'value': 'September 2026'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.3 inches'},
+          {'label': 'Resolution', 'value': '2622 x 1206 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2000 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A19 Pro Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '6-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Telephoto', 'value': '12MP'},
+          {'label': 'LiDAR Scanner', 'value': 'Yes'},
+          {'label': 'Video Recording', 'value': '8K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,000 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes (MagSafe)'},
+          {'label': 'Battery Life', 'value': 'Up to 27 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
+          {'label': 'Bluetooth', 'value': '5.4'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 17
+    if (productName == 'iPhone 17') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 17'},
+          {'label': 'Release Date', 'value': 'September 2026'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.1 inches'},
+          {'label': 'Resolution', 'value': '2532 x 1170 pixels'},
+          {'label': 'Refresh Rate', 'value': '60Hz'},
+          {'label': 'Brightness', 'value': '1600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A19 Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '4-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '3,500 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 24 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 2.0'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 16 Pro Max
+    if (productName == 'iPhone 16 Pro Max') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 16 Pro Max'},
+          {'label': 'Release Date', 'value': 'September 2025'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.9 inches'},
+          {'label': 'Resolution', 'value': '2796 x 1290 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2000 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A18 Pro Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '6-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '48MP'},
+          {'label': 'Telephoto', 'value': '12MP (5x optical)'},
+          {'label': 'LiDAR Scanner', 'value': 'Yes'},
+          {'label': 'Video Recording', 'value': '4K at 120fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,685 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes (MagSafe)'},
+          {'label': 'Battery Life', 'value': 'Up to 29 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
+          {'label': 'Bluetooth', 'value': '5.4'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 16 Pro
+    if (productName == 'iPhone 16 Pro') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 16 Pro'},
+          {'label': 'Release Date', 'value': 'September 2025'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.3 inches'},
+          {'label': 'Resolution', 'value': '2622 x 1206 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2000 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A18 Pro Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '6-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '48MP'},
+          {'label': 'Telephoto', 'value': '12MP (5x optical)'},
+          {'label': 'LiDAR Scanner', 'value': 'Yes'},
+          {'label': 'Video Recording', 'value': '4K at 120fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,000 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes (MagSafe)'},
+          {'label': 'Battery Life', 'value': 'Up to 27 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
+          {'label': 'Bluetooth', 'value': '5.4'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 16 Plus
+    if (productName == 'iPhone 16 Plus') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 16 Plus'},
+          {'label': 'Release Date', 'value': 'September 2025'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.7 inches'},
+          {'label': 'Resolution', 'value': '2796 x 1290 pixels'},
+          {'label': 'Refresh Rate', 'value': '60Hz'},
+          {'label': 'Brightness', 'value': '1600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A18 Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '4-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,674 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 26 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 2.0'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 16
+    if (productName == 'iPhone 16') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 16'},
+          {'label': 'Release Date', 'value': 'September 2025'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.1 inches'},
+          {'label': 'Resolution', 'value': '2532 x 1170 pixels'},
+          {'label': 'Refresh Rate', 'value': '60Hz'},
+          {'label': 'Brightness', 'value': '1600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A18 Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '4-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '3,561 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 22 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 2.0'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 15 Pro Max
+    if (productName == 'iPhone 15 Pro Max') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 15 Pro Max'},
+          {'label': 'Release Date', 'value': 'September 2024'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.7 inches'},
+          {'label': 'Resolution', 'value': '2796 x 1290 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2000 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A17 Pro Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '6-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Telephoto', 'value': '12MP (5x optical)'},
+          {'label': 'LiDAR Scanner', 'value': 'Yes'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,441 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes (MagSafe)'},
+          {'label': 'Battery Life', 'value': 'Up to 29 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6E'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.0'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 15 Pro
+    if (productName == 'iPhone 15 Pro') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 15 Pro'},
+          {'label': 'Release Date', 'value': 'September 2024'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.1 inches'},
+          {'label': 'Resolution', 'value': '2556 x 1179 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2000 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A17 Pro Chip'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '6-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Telephoto', 'value': '12MP (3x optical)'},
+          {'label': 'LiDAR Scanner', 'value': 'Yes'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '3,274 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes (MagSafe)'},
+          {'label': 'Battery Life', 'value': 'Up to 23 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6E'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.0'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone 15
+    if (productName == 'iPhone 15') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone 15'},
+          {'label': 'Release Date', 'value': 'September 2024'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina XDR OLED'},
+          {'label': 'Size', 'value': '6.1 inches'},
+          {'label': 'Resolution', 'value': '2556 x 1179 pixels'},
+          {'label': 'Refresh Rate', 'value': '60Hz'},
+          {'label': 'Brightness', 'value': '1600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A16 Bionic'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '5-core GPU'},
+          {'label': 'Neural Engine', 'value': '16-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '48MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '3,349 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 20 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 2.0'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone XR
+    if (productName == 'iPhone XR') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone XR'},
+          {'label': 'Release Date', 'value': 'October 2018'},
+          {'label': 'Status', 'value': 'Discontinued'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Liquid Retina IPS LCD'},
+          {'label': 'Size', 'value': '6.1 inches'},
+          {'label': 'Resolution', 'value': '1792 x 828 pixels'},
+          {'label': 'Refresh Rate', 'value': '60Hz'},
+          {'label': 'Brightness', 'value': '625 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A12 Bionic'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '4-core GPU'},
+          {'label': 'Neural Engine', 'value': '8-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '12MP Main'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '2,942 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes (Qi)'},
+          {'label': 'Battery Life', 'value': 'Up to 25 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '4G LTE', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 5'},
+          {'label': 'Bluetooth', 'value': '5.0'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'Lightning'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // iPhone XS Max
+    if (productName == 'iPhone XS Max') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Apple'},
+          {'label': 'Model', 'value': 'iPhone XS Max'},
+          {'label': 'Release Date', 'value': 'September 2018'},
+          {'label': 'Status', 'value': 'Discontinued'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super Retina OLED'},
+          {'label': 'Size', 'value': '6.5 inches'},
+          {'label': 'Resolution', 'value': '2688 x 1242 pixels'},
+          {'label': 'Refresh Rate', 'value': '60Hz'},
+          {'label': 'Brightness', 'value': '625 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'A12 Bionic'},
+          {'label': 'CPU', 'value': '6-core CPU'},
+          {'label': 'GPU', 'value': '4-core GPU'},
+          {'label': 'Neural Engine', 'value': '8-core'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '12MP Dual Camera'},
+          {'label': 'Telephoto', 'value': '12MP'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '3,174 mAh'},
+          {'label': 'Charging', 'value': 'Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes (Qi)'},
+          {'label': 'Battery Life', 'value': 'Up to 24 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '4G LTE', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 5'},
+          {'label': 'Bluetooth', 'value': '5.0'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'Lightning'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Face ID', 'value': 'Yes'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy S26 Ultra
+    if (productName == 'Galaxy S26 Ultra') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy S26 Ultra'},
+          {'label': 'Release Date', 'value': 'February 2026'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size', 'value': '6.8 inches'},
+          {'label': 'Resolution', 'value': '3088 x 1440 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 4'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 760'},
+          {'label': 'RAM', 'value': '12GB/16GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '200MP Main'},
+          {'label': 'Ultra Wide', 'value': '50MP'},
+          {'label': 'Telephoto', 'value': '50MP (10x optical)'},
+          {'label': 'Periscope', 'value': '50MP (5x optical)'},
+          {'label': 'Video Recording', 'value': '8K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '5,000 mAh'},
+          {'label': 'Charging', 'value': '65W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 31 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
+          {'label': 'Bluetooth', 'value': '5.4'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Ultrasonic Under-Display'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy S26 Plus
+    if (productName == 'Galaxy S26 Plus') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy S26 Plus'},
+          {'label': 'Release Date', 'value': 'February 2026'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size', 'value': '6.7 inches'},
+          {'label': 'Resolution', 'value': '3120 x 1440 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 4'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 760'},
+          {'label': 'RAM', 'value': '12GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '50MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Telephoto', 'value': '10MP (3x optical)'},
+          {'label': 'Video Recording', 'value': '8K at 30fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,900 mAh'},
+          {'label': 'Charging', 'value': '45W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 29 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
+          {'label': 'Bluetooth', 'value': '5.4'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Ultrasonic Under-Display'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy S26
+    if (productName == 'Galaxy S26') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy S26'},
+          {'label': 'Release Date', 'value': 'February 2026'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size', 'value': '6.2 inches'},
+          {'label': 'Resolution', 'value': '2340 x 1080 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 4'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 760'},
+          {'label': 'RAM', 'value': '8GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '50MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Video Recording', 'value': '8K at 30fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,000 mAh'},
+          {'label': 'Charging', 'value': '25W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 24 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Optical Under-Display'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy Z Fold 7
+    if (productName == 'Galaxy Z Fold 7') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy Z Fold 7'},
+          {'label': 'Release Date', 'value': 'August 2026'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type (Main)', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size (Main)', 'value': '7.6 inches'},
+          {'label': 'Type (Cover)', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size (Cover)', 'value': '6.3 inches'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 4'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 760'},
+          {'label': 'RAM', 'value': '16GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '200MP Main'},
+          {'label': 'Ultra Wide', 'value': '50MP'},
+          {'label': 'Telephoto', 'value': '10MP (3x optical)'},
+          {'label': 'Video Recording', 'value': '8K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,800 mAh'},
+          {'label': 'Charging', 'value': '45W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 28 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
+          {'label': 'Bluetooth', 'value': '5.4'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Side-mounted'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy Z Flip 7
+    if (productName == 'Galaxy Z Flip 7') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy Z Flip 7'},
+          {'label': 'Release Date', 'value': 'August 2026'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type (Main)', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size (Main)', 'value': '6.7 inches'},
+          {'label': 'Type (Cover)', 'value': 'Super AMOLED'},
+          {'label': 'Size (Cover)', 'value': '3.4 inches'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 4'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 760'},
+          {'label': 'RAM', 'value': '12GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '50MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,000 mAh'},
+          {'label': 'Charging', 'value': '25W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 22 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6E'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Side-mounted'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy Z Fold 6
+    if (productName == 'Galaxy Z Fold 6') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy Z Fold 6'},
+          {'label': 'Release Date', 'value': 'August 2025'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type (Main)', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size (Main)', 'value': '7.6 inches'},
+          {'label': 'Type (Cover)', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size (Cover)', 'value': '6.3 inches'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 3'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 750'},
+          {'label': 'RAM', 'value': '12GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '200MP Main'},
+          {'label': 'Ultra Wide', 'value': '50MP'},
+          {'label': 'Telephoto', 'value': '10MP (3x optical)'},
+          {'label': 'Video Recording', 'value': '8K at 30fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,400 mAh'},
+          {'label': 'Charging', 'value': '25W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 26 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6E'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Side-mounted'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy Z Flip 6
+    if (productName == 'Galaxy Z Flip 6') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy Z Flip 6'},
+          {'label': 'Release Date', 'value': 'August 2025'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type (Main)', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size (Main)', 'value': '6.7 inches'},
+          {'label': 'Type (Cover)', 'value': 'Super AMOLED'},
+          {'label': 'Size (Cover)', 'value': '3.4 inches'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 3'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 750'},
+          {'label': 'RAM', 'value': '12GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '50MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Video Recording', 'value': '4K at 60fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,000 mAh'},
+          {'label': 'Charging', 'value': '25W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 22 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6E'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Side-mounted'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy A55 5G
+    if (productName == 'Galaxy A55 5G') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy A55 5G'},
+          {'label': 'Release Date', 'value': 'March 2024'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super AMOLED'},
+          {'label': 'Size', 'value': '6.6 inches'},
+          {'label': 'Resolution', 'value': '2340 x 1080 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '1000 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Exynos 1480'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Mali-G68'},
+          {'label': 'RAM', 'value': '8GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '50MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Macro', 'value': '5MP'},
+          {'label': 'Video Recording', 'value': '4K at 30fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '5,000 mAh'},
+          {'label': 'Charging', 'value': '25W Fast Charging'},
+          {'label': 'Battery Life', 'value': 'Up to 24 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 2.0'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Under-Display'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy A35 5G
+    if (productName == 'Galaxy A35 5G') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy A35 5G'},
+          {'label': 'Release Date', 'value': 'March 2024'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Super AMOLED'},
+          {'label': 'Size', 'value': '6.6 inches'},
+          {'label': 'Resolution', 'value': '2340 x 1080 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '1000 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Exynos 1380'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Mali-G68'},
+          {'label': 'RAM', 'value': '8GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '50MP Main'},
+          {'label': 'Ultra Wide', 'value': '8MP'},
+          {'label': 'Macro', 'value': '5MP'},
+          {'label': 'Video Recording', 'value': '4K at 30fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '5,000 mAh'},
+          {'label': 'Charging', 'value': '25W Fast Charging'},
+          {'label': 'Battery Life', 'value': 'Up to 24 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 2.0'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Under-Display'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy S25 Ultra
+    if (productName == 'Galaxy S25 Ultra') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy S25 Ultra'},
+          {'label': 'Release Date', 'value': 'February 2025'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size', 'value': '6.8 inches'},
+          {'label': 'Resolution', 'value': '3088 x 1440 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 3'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 750'},
+          {'label': 'RAM', 'value': '12GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '200MP Main'},
+          {'label': 'Ultra Wide', 'value': '50MP'},
+          {'label': 'Telephoto', 'value': '50MP (5x optical)'},
+          {'label': 'Video Recording', 'value': '8K at 30fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '5,000 mAh'},
+          {'label': 'Charging', 'value': '45W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 30 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Ultrasonic Under-Display'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Galaxy S25 Plus
+    if (productName == 'Galaxy S25 Plus') {
+      return [
+        {'title': 'General', 'items': [
+          {'label': 'Brand', 'value': 'Samsung'},
+          {'label': 'Model', 'value': 'Galaxy S25 Plus'},
+          {'label': 'Release Date', 'value': 'February 2025'},
+          {'label': 'Status', 'value': 'Available'},
+        ]},
+        {'title': 'Display', 'items': [
+          {'label': 'Type', 'value': 'Dynamic AMOLED 2X'},
+          {'label': 'Size', 'value': '6.7 inches'},
+          {'label': 'Resolution', 'value': '3120 x 1440 pixels'},
+          {'label': 'Refresh Rate', 'value': '120Hz'},
+          {'label': 'Brightness', 'value': '2600 nits (peak)'},
+        ]},
+        {'title': 'Performance', 'items': [
+          {'label': 'Processor', 'value': 'Snapdragon 8 Gen 3'},
+          {'label': 'CPU', 'value': 'Octa-core'},
+          {'label': 'GPU', 'value': 'Adreno 750'},
+          {'label': 'RAM', 'value': '12GB'},
+        ]},
+        {'title': 'Camera', 'items': [
+          {'label': 'Main Camera', 'value': '50MP Main'},
+          {'label': 'Ultra Wide', 'value': '12MP'},
+          {'label': 'Telephoto', 'value': '10MP (3x optical)'},
+          {'label': 'Video Recording', 'value': '8K at 30fps'},
+        ]},
+        {'title': 'Battery & Charging', 'items': [
+          {'label': 'Battery Capacity', 'value': '4,900 mAh'},
+          {'label': 'Charging', 'value': '45W Fast Charging'},
+          {'label': 'Wireless Charging', 'value': 'Yes'},
+          {'label': 'Battery Life', 'value': 'Up to 28 hours'},
+        ]},
+        {'title': 'Connectivity', 'items': [
+          {'label': '5G', 'value': 'Yes'},
+          {'label': 'Wi-Fi', 'value': 'Wi-Fi 6E'},
+          {'label': 'Bluetooth', 'value': '5.3'},
+          {'label': 'NFC', 'value': 'Yes'},
+          {'label': 'USB', 'value': 'USB-C 3.2'},
+        ]},
+        {'title': 'Sensors', 'items': [
+          {'label': 'Fingerprint', 'value': 'Ultrasonic Under-Display'},
+          {'label': 'Accelerometer', 'value': 'Yes'},
+          {'label': 'Gyroscope', 'value': 'Yes'},
+          {'label': 'Barometer', 'value': 'Yes'},
+        ]},
+      ];
+    }
+
+    // Default specs for products not specifically defined
+    return _defaultSpecs;
+  }
+
+  final List<Map<String, dynamic>> _defaultSpecs = [
+    {'title': 'General', 'items': [
+      {'label': 'Brand', 'value': 'Various'},
+      {'label': 'Status', 'value': 'Available'},
+    ]},
+    {'title': 'Specifications', 'items': [
+      {'label': 'Details', 'value': 'Check with manufacturer'},
+    ]},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -1129,6 +2512,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   // ========== SPECIFICATIONS ==========
   Widget _buildSpecifications() {
+    final specs = _getProductSpecs();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1140,7 +2525,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        ..._fullSpecs.map((section) {
+        ...specs.map((section) {
           final items = section['items'] as List<Map<String, dynamic>>? ?? [];
           return Card(
             margin: const EdgeInsets.only(bottom: 8),
@@ -1234,56 +2619,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         return Icons.wifi_rounded;
       case 'Sensors':
         return Icons.sensors_rounded;
+      case 'Features':
+        return Icons.star_outline_rounded;
+      case 'Audio':
+        return Icons.audiotrack_rounded;
       default:
         return Icons.circle_outlined;
     }
   }
-
-  final List<Map<String, dynamic>> _fullSpecs = [
-    {'title': 'General', 'items': [
-      {'label': 'Brand', 'value': 'Apple'},
-      {'label': 'Model', 'value': 'iPhone 17 Pro Max'},
-      {'label': 'Release Date', 'value': 'September 2026'},
-      {'label': 'Status', 'value': 'Available'},
-    ]},
-    {'title': 'Display', 'items': [
-      {'label': 'Type', 'value': 'Super Retina XDR OLED'},
-      {'label': 'Size', 'value': '6.9 inches'},
-      {'label': 'Resolution', 'value': '2796 x 1290 pixels'},
-      {'label': 'Refresh Rate', 'value': '120Hz'},
-      {'label': 'Brightness', 'value': '2000 nits (peak)'},
-    ]},
-    {'title': 'Performance', 'items': [
-      {'label': 'Processor', 'value': 'A19 Pro Chip'},
-      {'label': 'CPU', 'value': '6-core CPU'},
-      {'label': 'GPU', 'value': '6-core GPU'},
-      {'label': 'Neural Engine', 'value': '16-core'},
-    ]},
-    {'title': 'Camera', 'items': [
-      {'label': 'Main Camera', 'value': '48MP Main'},
-      {'label': 'Ultra Wide', 'value': '12MP'},
-      {'label': 'Telephoto', 'value': '12MP'},
-      {'label': 'LiDAR Scanner', 'value': 'Yes'},
-      {'label': 'Video Recording', 'value': '8K at 60fps'},
-    ]},
-    {'title': 'Battery & Charging', 'items': [
-      {'label': 'Battery Capacity', 'value': '4,685 mAh'},
-      {'label': 'Charging', 'value': 'Fast Charging'},
-      {'label': 'Wireless Charging', 'value': 'Yes (MagSafe)'},
-      {'label': 'Battery Life', 'value': 'Up to 29 hours'},
-    ]},
-    {'title': 'Connectivity', 'items': [
-      {'label': '5G', 'value': 'Yes'},
-      {'label': 'Wi-Fi', 'value': 'Wi-Fi 7'},
-      {'label': 'Bluetooth', 'value': '5.4'},
-      {'label': 'NFC', 'value': 'Yes'},
-      {'label': 'USB', 'value': 'USB-C 3.2'},
-    ]},
-    {'title': 'Sensors', 'items': [
-      {'label': 'Face ID', 'value': 'Yes'},
-      {'label': 'Accelerometer', 'value': 'Yes'},
-      {'label': 'Gyroscope', 'value': 'Yes'},
-      {'label': 'Barometer', 'value': 'Yes'},
-    ]},
-  ];
 }
