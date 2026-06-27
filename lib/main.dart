@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'app.dart';
+import 'features/common/phonehub_store.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await PhoneHubStore.instance.init();
   runApp(const PhoneShopApp());
 }

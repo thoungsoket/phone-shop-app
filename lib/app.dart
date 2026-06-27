@@ -12,6 +12,13 @@ import 'features/map/map_screen.dart';
 import 'features/category/category_screen.dart';
 import 'features/detail/product_detail_screen.dart';
 import 'theme/app_theme.dart';
+import 'features/profile/profile_screen.dart';
+import 'features/settings/settings_screen.dart';
+import 'features/booking/booking_screen.dart';
+import 'features/repair_tracker/repair_tracker_screen.dart';
+import 'features/chat/chat_screen.dart';
+import 'features/reviews/reviews_screen.dart';
+import 'features/gallery/gallery_screen.dart';
 
 class PhoneShopApp extends StatelessWidget {
   const PhoneShopApp({super.key});
@@ -24,7 +31,7 @@ class PhoneShopApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home: const OnboardingScreen(),
+      home: const ProfileScreen(),
       routes: {
         '/home': (context) => const HomeScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
@@ -36,8 +43,16 @@ class PhoneShopApp extends StatelessWidget {
         '/promotions': (context) => const PromotionsScreen(),
         '/nearby': (context) => const NearbyScreen(),
         '/map': (context) => const MapScreen(),
+        '/profile': (context) => const ProfileScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/book-repair': (context) => const BookingScreen(),
+        '/repair-tracker': (context) => const RepairTrackerScreen(),
+        '/chat': (context) => const ChatScreen(),
+        '/reviews': (context) => const ReviewsScreen(),
+        '/gallery': (context) => const GalleryScreen(),
         '/category': (context) => const CategoryScreen(
           categoryName: 'Smartphones',
+        
         ),
       },
       onGenerateRoute: (settings) {
