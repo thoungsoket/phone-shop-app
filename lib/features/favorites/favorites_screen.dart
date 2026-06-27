@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../cart/cart_screen.dart';
 import '../compare/compare_screen.dart';
 import '../home/home_screen.dart';
@@ -7,7 +8,8 @@ import '../promotions/promotions_screen.dart';
 import '../detail/product_detail_screen.dart';
 import '../data/product_data.dart';
 import '../search/search_delegate.dart';
-import '../category/category_screen.dart'; // ✅ ADD THIS IMPORT
+import '../../state/app_provider.dart';
+import '../category/category_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -21,63 +23,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   bool _isDarkMode = false;
   bool _isCategoriesExpanded = false;
   String _searchQuery = '';
-  bool _showEmptyState = false;
-
-  // Sample favorite items with more realistic data
-  final List<Map<String, dynamic>> _favoriteItems = [
-    {
-      'id': 1,
-      'name': 'iPhone 17 Pro Max',
-      'brand': 'Apple',
-      'price': 1399,
-      'image': 'assets/images/ip17promax.png',
-      'storage': '256GB',
-      'color': 'Titanium Silver',
-      'rating': 4.9,
-    },
-    {
-      'id': 31,
-      'name': 'Galaxy S26 Ultra',
-      'brand': 'Samsung',
-      'price': 1399,
-      'image': 'assets/images/s26_ultra.png',
-      'storage': '512GB',
-      'color': 'Titanium Black',
-      'rating': 4.9,
-    },
-    {
-      'id': 108,
-      'name': 'OnePlus 12',
-      'brand': 'OnePlus',
-      'price': 899,
-      'image': 'assets/images/oneplus12.png',
-      'storage': '256GB',
-      'color': 'Flowy Emerald',
-      'rating': 4.5,
-    },
-    {
-      'id': 119,
-      'name': 'Vivo X100 Ultra',
-      'brand': 'Vivo',
-      'price': 1099,
-      'image': 'assets/images/vivo_x100_ultra.png',
-      'storage': '256GB',
-      'color': 'Titanium',
-      'rating': 4.5,
-    },
-    {
-      'id': 60,
-      'name': 'Xiaomi 15 Pro',
-      'brand': 'Xiaomi',
-      'price': 999,
-      'image': 'assets/images/xiaomi15_pro.png',
-      'storage': '256GB',
-      'color': 'Black',
-      'rating': 4.6,
-    },
-  ];
-
-  List<Map<String, dynamic>> _displayedFavorites = [];
+  final TextEditingController _searchController = TextEditingController(); // ✅ ADDED
 
   final List<Map<String, dynamic>> _categories = [
     {'name': 'Smartphones', 'icon': Icons.phone_android_rounded, 'count': '44 Models'},
@@ -145,10 +91,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryScreen(
-          categoryName: categoryName,
-          initialFilter: 'All',
-        ),
+        builder: (context) => CategoryScreen(categoryName: categoryName, initialFilter: 'All'),
       ),
     );
   }
@@ -157,10 +100,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryScreen(
-          categoryName: brandName,
-          initialFilter: brandName,
-        ),
+        builder: (context) => CategoryScreen(categoryName: brandName, initialFilter: brandName),
       ),
     );
   }
@@ -177,31 +117,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   void _toggleCategories() {
-    setState(() { _isCategoriesExpanded = !_isCategoriesExpanded; });
-  }
-
-  void _toggleEmptyState() {
     setState(() {
-      _showEmptyState = !_showEmptyState;
-      if (_showEmptyState) {
-        _displayedFavorites = [];
-      } else {
-        _displayedFavorites = List.from(_favoriteItems);
-        _searchQuery = '';
-      }
+      _isCategoriesExpanded = !_isCategoriesExpanded;
     });
   }
 
-  void _removeFromFavorites(int index) {
-    setState(() {
-      _displayedFavorites.removeAt(index);
-      if (_displayedFavorites.isEmpty) {
-        _showEmptyState = true;
-      }
-    });
+  void _removeFromFavorites(Map<String, dynamic> product) {
+    context.read<CartProvider>().removeFavorite(product);
+    
+    // ✅ Clear search when removing an item
+    if (_searchQuery.isNotEmpty) {
+      _searchQuery = '';
+      _searchController.clear();
+    }
+    
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Removed from favorites ❤️'),
+        content: Text('Removed from favorites'),
         duration: Duration(seconds: 1),
         backgroundColor: Colors.grey,
       ),
@@ -212,37 +144,32 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   void _performSearch(String query) {
     setState(() {
       _searchQuery = query;
-      if (query.isEmpty) {
-        _displayedFavorites = List.from(_favoriteItems);
-        _showEmptyState = _displayedFavorites.isEmpty;
-      } else {
-        final searchResults = ProductData.search(query);
-        // Filter search results to only include items that are in favorites
-        final favoriteIds = _favoriteItems.map((item) => item['id'] as int).toSet();
-        _displayedFavorites = searchResults
-            .where((product) => favoriteIds.contains(product['id'] as int))
-            .map((product) {
-              // Find the favorite item to get additional details
-              final favorite = _favoriteItems.firstWhere(
-                (item) => item['id'] == product['id'],
-                orElse: () => {},
-              );
-              return {
-                ...product,
-                'storage': favorite['storage'] ?? '256GB',
-                'color': favorite['color'] ?? 'Default',
-              };
-            })
-            .toList();
-        _showEmptyState = _displayedFavorites.isEmpty;
-      }
     });
   }
 
+  void _clearSearch() {
+    setState(() {
+      _searchQuery = '';
+      _searchController.clear();
+    });
+  }
+
+  List<Map<String, dynamic>> _visibleFavorites(
+    List<Map<String, dynamic>> favorites,
+  ) {
+    if (_searchQuery.isEmpty) return favorites;
+    final query = _searchQuery.toLowerCase();
+    return favorites.where((product) {
+      final name = product['name']?.toString().toLowerCase() ?? '';
+      final brand = product['brand']?.toString().toLowerCase() ?? '';
+      return name.contains(query) || brand.contains(query);
+    }).toList();
+  }
+
   @override
-  void initState() {
-    super.initState();
-    _displayedFavorites = List.from(_favoriteItems);
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -302,7 +229,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               child: Container(
                 padding: const EdgeInsets.all(3),
                 decoration: const BoxDecoration(color: Color(0xFFFF3B30), shape: BoxShape.circle),
-                child: const Text('0', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                child: Text(
+                  '${context.watch<CartProvider>().itemCount}',
+                  style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -548,25 +478,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Categories',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF0F172A)),
-                      ),
-                      Text(
-                        'Browse all products',
-                        style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-                      ),
+                      const Text('Categories', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
+                      Text('Browse all products', style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
                     ],
                   ),
                 ),
                 AnimatedRotation(
                   turns: _isCategoriesExpanded ? 0.5 : 0,
                   duration: const Duration(milliseconds: 300),
-                  child: const Icon(
-                    Icons.arrow_drop_down_rounded,
-                    color: Color(0xFF94A3B8),
-                    size: 28,
-                  ),
+                  child: const Icon(Icons.arrow_drop_down_rounded, color: Color(0xFF94A3B8), size: 28),
                 ),
               ],
             ),
@@ -596,12 +516,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  // ✅ FIXED: This now correctly navigates to the category screen
   Widget _buildSubCategoryItem(Map<String, dynamic> category) {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
-        // Navigate directly to the category screen with the category name
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -639,14 +557,17 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   // ==================== BODY ====================
   Widget _buildBody() {
+    final favorites = context.watch<CartProvider>().favorites;
+    final visibleFavorites = _visibleFavorites(favorites);
+
     return Column(
       children: [
-        _buildHeader(),
+        _buildHeader(visibleFavorites.length),
         _buildSearchBar(),
         Expanded(
-          child: _showEmptyState
+          child: visibleFavorites.isEmpty
               ? _buildEmptyState()
-              : _buildFavoritesGrid(),
+              : _buildFavoritesGrid(visibleFavorites),
         ),
       ],
     );
@@ -658,15 +579,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: Colors.white,
       child: TextField(
+        controller: _searchController, // ✅ Added controller
         decoration: InputDecoration(
           hintText: 'Search favorites...',
           prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.clear, color: Color(0xFF94A3B8)),
-                  onPressed: () {
-                    _performSearch('');
-                  },
+                  onPressed: _clearSearch, // ✅ Clear search when X is pressed
                 )
               : null,
           filled: true,
@@ -683,7 +603,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(int favoriteCount) {
     return Container(
       padding: const EdgeInsets.all(20),
       color: Colors.white,
@@ -703,7 +623,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                _showEmptyState ? '0 Saved Devices' : '${_displayedFavorites.length} Saved Devices',
+                '$favoriteCount Saved Devices',
                 style: TextStyle(
                   color: Colors.grey.shade600,
                   fontSize: 14,
@@ -711,22 +631,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 ),
               ),
             ],
-          ),
-          TextButton.icon(
-            onPressed: _toggleEmptyState,
-            icon: Icon(
-              _showEmptyState ? Icons.visibility_rounded : Icons.visibility_off_rounded,
-              color: const Color(0xFF007BF6),
-              size: 18,
-            ),
-            label: Text(
-              _showEmptyState ? 'Show Favorites' : 'Toggle Empty State',
-              style: const TextStyle(
-                color: Color(0xFF007BF6),
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-              ),
-            ),
           ),
         ],
       ),
@@ -754,13 +658,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            _searchQuery.isNotEmpty 
-                ? 'Try a different search term' 
-                : 'Start saving your favorite devices ❤️',
-            style: TextStyle(
-              color: Colors.grey.shade500,
-              fontSize: 14,
-            ),
+            _searchQuery.isNotEmpty ? 'Try a different search term' : 'Start saving your favorite devices ❤️',
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           ),
           const SizedBox(height: 24),
           if (!_searchQuery.isNotEmpty)
@@ -782,8 +681,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  Widget _buildFavoritesGrid() {
-    if (_displayedFavorites.isEmpty) {
+  Widget _buildFavoritesGrid(List<Map<String, dynamic>> favorites) {
+    if (favorites.isEmpty) {
       return _buildEmptyState();
     }
 
@@ -796,22 +695,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
-      itemCount: _displayedFavorites.length,
+      itemCount: favorites.length,
       itemBuilder: (context, index) {
-        final item = _displayedFavorites[index];
-        return _buildFavoriteCard(item, index);
+        final item = favorites[index];
+        return _buildFavoriteCard(item);
       },
     );
   }
 
-  Widget _buildFavoriteCard(Map<String, dynamic> item, int index) {
+  Widget _buildFavoriteCard(Map<String, dynamic> item) {
     final String brand = item['brand'] as String? ?? 'Brand';
     final String name = item['name'] as String? ?? 'Product';
-    final int price = item['price'] as int? ?? 0;
+    final num price = item['price'] as num? ?? 0;
+    final String priceText = price % 1 == 0 ? price.toInt().toString() : price.toStringAsFixed(2);
     final String image = item['image'] as String? ?? 'assets/images/placeholder.png';
     final String storage = item['storage'] as String? ?? '256GB';
     final String color = item['color'] as String? ?? 'Default';
-    final double rating = (item['rating'] as double?) ?? 4.5;
+    final double rating = (item['rating'] as num?)?.toDouble() ?? 4.5;
 
     return GestureDetector(
       onTap: () => _navigateToProductDetail(item),
@@ -879,17 +779,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     right: 4,
                     top: 4,
                     child: GestureDetector(
-                      onTap: () => _removeFromFavorites(index),
+                      onTap: () => _removeFromFavorites(item),
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                           boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 4,
-                            ),
+                            BoxShadow(color: Colors.black12, blurRadius: 4),
                           ],
                         ),
                         child: const Icon(
@@ -953,7 +850,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '\$$price',
+                          '\$$priceText',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
@@ -962,9 +859,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
+                            context.read<CartProvider>().addProduct(item);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('$name added to cart 🛒'),
+                                content: Text('$name added to cart'),
                                 backgroundColor: const Color(0xFF10B981),
                                 duration: const Duration(seconds: 1),
                               ),

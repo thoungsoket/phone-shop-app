@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../checkout/checkout_screen.dart';
 import '../home/home_screen.dart';
+import '../../state/app_provider.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -10,16 +12,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  int phoneQty = 1;
-  int budsQty = 1;
-
-  final double phonePrice = 1099;
-  final double budsPrice = 199;
-  final double discount = 50;
-
-  double get subtotal => (phonePrice * phoneQty) + (budsPrice * budsQty);
-  double get total => subtotal - discount;
-
   void _navigateToHome() {
     Navigator.pushReplacement(
       context,
@@ -30,26 +22,25 @@ class _CartScreenState extends State<CartScreen> {
   void _navigateToCheckout() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => CheckoutScreen(
-          phoneQty: phoneQty,
-          budsQty: budsQty,
-        ),
-      ),
+      MaterialPageRoute(builder: (_) => const CheckoutScreen()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+    return Consumer<CartProvider>(
+      builder: (context, cart, _) {
+        return Scaffold(
+          backgroundColor: const Color(0xFFF8FAFC),
+          appBar: _buildAppBar(cart),
+          body: _buildBody(cart),
+        );
+      },
     );
   }
 
   // ==================== APP BAR ====================
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(CartProvider cart) {
     return AppBar(
       backgroundColor: Colors.white.withOpacity(0.95),
       elevation: 0,
@@ -57,7 +48,11 @@ class _CartScreenState extends State<CartScreen> {
       leading: Padding(
         padding: const EdgeInsets.only(left: 8.0),
         child: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF0F172A), size: 24),
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: Color(0xFF0F172A),
+            size: 24,
+          ),
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
@@ -93,11 +88,14 @@ class _CartScreenState extends State<CartScreen> {
         ],
       ),
       actions: [
-        // Search icon REMOVED
         Stack(
           children: [
             IconButton(
-              icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF0F172A), size: 24),
+              icon: const Icon(
+                Icons.shopping_cart_outlined,
+                color: Color(0xFF0F172A),
+                size: 24,
+              ),
               onPressed: () {}, // Already on cart
             ),
             Positioned(
@@ -105,9 +103,12 @@ class _CartScreenState extends State<CartScreen> {
               top: 6,
               child: Container(
                 padding: const EdgeInsets.all(3),
-                decoration: const BoxDecoration(color: Color(0xFFFF3B30), shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFF3B30),
+                  shape: BoxShape.circle,
+                ),
                 child: Text(
-                  '${phoneQty + budsQty}',
+                  '${cart.itemCount}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 8,
@@ -124,7 +125,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   // ==================== BODY ====================
-  Widget _buildBody() {
+  Widget _buildBody(CartProvider cart) {
     return Column(
       children: [
         Expanded(
@@ -140,144 +141,135 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              CartItemCard(
-                image: 'assets/images/iphone_15_pro.png',
-                name: 'Nova Pro Max',
-                detail: '256GB • Phantom Black',
-                price: phonePrice,
-                quantity: phoneQty,
-                onAdd: () => setState(() => phoneQty++),
-                onRemove: () {
-                  if (phoneQty > 1) setState(() => phoneQty--);
-                },
-              ),
-              const SizedBox(height: 14),
-              CartItemCard(
-                image: 'assets/images/aero_fold_4.png',
-                name: 'AeroBuds Pro',
-                detail: 'Noise Cancelling',
-                price: budsPrice,
-                quantity: budsQty,
-                onAdd: () => setState(() => budsQty++),
-                onRemove: () {
-                  if (budsQty > 1) setState(() => budsQty--);
-                },
-              ),
-              const SizedBox(height: 16),
-              // Don't forget charger card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8FAFC),
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: const Color(0xFFE5E7EB)),
-                ),
-                child: Row(
-                  children: [
-                    const CircleAvatar(
-                      radius: 28,
-                      backgroundColor: Color(0xFFDDF7FF),
-                      child: Icon(Icons.headphones, color: Color(0xFF00AEEF)),
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Don't forget a charger!",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF0F172A),
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Add a 30W Fast Charger for \$29',
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
+              if (cart.items.isEmpty)
+                _buildEmptyCart()
+              else
+                ...cart.items.expand(
+                  (item) => [
+                    CartItemCard(
+                      image: item.image,
+                      name: item.name,
+                      detail: item.detail,
+                      price: item.price,
+                      quantity: item.quantity,
+                      onAdd: () => cart.increment(item.id),
+                      onRemove: () => cart.decrement(item.id),
+                      onDelete: () {
+                        cart.remove(item.id);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Charger added to cart! 🔌'),
-                            backgroundColor: Color(0xFF10B981),
+                            content: Text('Item removed from cart'),
                             duration: Duration(seconds: 1),
+                            backgroundColor: Colors.grey,
                           ),
                         );
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE5E7EB),
-                        foregroundColor: Colors.black87,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                      ),
-                      child: const Text('Add'),
                     ),
+                    const SizedBox(height: 14),
                   ],
                 ),
-              ),
             ],
           ),
         ),
         // Bottom summary
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
-          ),
-          child: Column(
-            children: [
-              SummaryRow(
-                label: 'Subtotal',
-                value: '\$${subtotal.toStringAsFixed(2)}',
-              ),
-              const SizedBox(height: 8),
-              SummaryRow(
-                label: 'Bundle Discount',
-                value: '-\$${discount.toStringAsFixed(2)}',
-                valueColor: const Color(0xFF10B981),
-              ),
-              const Divider(height: 24, color: Color(0xFFE5E7EB)),
-              SummaryRow(
-                label: 'Total',
-                value: '\$${total.toStringAsFixed(2)}',
-                isTotal: true,
-              ),
-              const SizedBox(height: 14),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _navigateToCheckout,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF007BF6),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 17),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+        if (cart.items.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
+            ),
+            child: Column(
+              children: [
+                SummaryRow(
+                  label: 'Subtotal',
+                  value: '\$${cart.subtotal.toStringAsFixed(2)}',
+                ),
+                const SizedBox(height: 8),
+                SummaryRow(
+                  label: 'Bundle Discount',
+                  value: '-\$${cart.discount.toStringAsFixed(2)}',
+                  valueColor: const Color(0xFF10B981),
+                ),
+                const Divider(height: 24, color: Color(0xFFE5E7EB)),
+                SummaryRow(
+                  label: 'Total',
+                  value: '\$${cart.cartTotal.toStringAsFixed(2)}',
+                  isTotal: true,
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _navigateToCheckout,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF007BF6),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 17),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Proceed to Checkout  →',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
+                    child: const Text(
+                      'Proceed to Checkout  →',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
       ],
+    );
+  }
+
+  Widget _buildEmptyCart() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.shopping_cart_outlined,
+            size: 80,
+            color: Colors.grey.shade300,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Your cart is empty',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Add some products to get started',
+            style: TextStyle(
+              color: Colors.grey.shade500,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: _navigateToHome,
+            icon: const Icon(Icons.home_rounded),
+            label: const Text('Continue Shopping'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF007BF6),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 12,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -291,6 +283,7 @@ class CartItemCard extends StatelessWidget {
   final int quantity;
   final VoidCallback onAdd;
   final VoidCallback onRemove;
+  final VoidCallback onDelete;
 
   const CartItemCard({
     super.key,
@@ -301,6 +294,7 @@ class CartItemCard extends StatelessWidget {
     required this.quantity,
     required this.onAdd,
     required this.onRemove,
+    required this.onDelete,
   });
 
   @override
@@ -355,15 +349,7 @@ class CartItemCard extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Item removed from cart'),
-                            duration: Duration(seconds: 1),
-                            backgroundColor: Colors.grey,
-                          ),
-                        );
-                      },
+                      onTap: onDelete,
                       child: const Icon(
                         Icons.delete_outline,
                         size: 19,
@@ -373,10 +359,7 @@ class CartItemCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  detail,
-                  style: const TextStyle(color: Colors.black54),
-                ),
+                Text(detail, style: const TextStyle(color: Colors.black54)),
                 const SizedBox(height: 12),
                 Row(
                   children: [

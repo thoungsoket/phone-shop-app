@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/compare/compare_screen.dart';
@@ -11,6 +12,7 @@ import 'features/nearby/nearby_screen.dart';
 import 'features/map/map_screen.dart';
 import 'features/category/category_screen.dart';
 import 'features/detail/product_detail_screen.dart';
+import 'state/app_provider.dart';
 import 'theme/app_theme.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/settings/settings_screen.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../data/product_data.dart';
 import '../search/search_delegate.dart';
@@ -8,6 +9,7 @@ import '../compare/compare_screen.dart';
 import '../favorites/favorites_screen.dart';
 import '../nearby/nearby_screen.dart';
 import '../promotions/promotions_screen.dart';
+import '../../state/app_provider.dart';
 
 class CategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -33,59 +35,164 @@ class _CategoryScreenState extends State<CategoryScreen> {
   bool _showSubCategories = true;
   String _searchQuery = '';
 
-  // Favorite states - persisted across the screen
-  final Map<int, bool> _favoritedProducts = {};
-  
-  // Cart states
-  final Map<int, bool> _cartProducts = {};
-
   final List<String> _filters = [
-    'All', 
-    'Apple', 
-    'Samsung', 
-    'Xiaomi', 
+    'All',
+    'Apple',
+    'Samsung',
+    'Xiaomi',
     'Oppo',
-    'OnePlus', 
+    'OnePlus',
     'Vivo',
   ];
-  
-  final List<String> _sortOptions = ['Popular', 'Price: Low to High', 'Price: High to Low', 'Newest', 'Rating: High to Low'];
+
+  final List<String> _sortOptions = [
+    'Popular',
+    'Price: Low to High',
+    'Price: High to Low',
+    'Newest',
+    'Rating: High to Low',
+  ];
 
   // ========== SVG BRAND LOGOS ==========
   final Map<String, List<Map<String, dynamic>>> _subCategories = {
     'Smartphones': [
-      {'name': 'Apple', 'iconPath': 'assets/images/brands/apple.svg', 'count': '12 Models', 'color': 0xFF000000},
-      {'name': 'Samsung', 'iconPath': 'assets/images/brands/samsung.svg', 'count': '11 Models', 'color': 0xFF1428A0},
-      {'name': 'Xiaomi', 'iconPath': 'assets/images/brands/xiaomi.svg', 'count': '10 Models', 'color': 0xFFFF6900},
-      {'name': 'Oppo', 'iconPath': 'assets/images/brands/oppo.svg', 'count': '10 Models', 'color': 0xFF1A6B37},
-      {'name': 'OnePlus', 'iconPath': 'assets/images/brands/oneplus.svg', 'count': '6 Models', 'color': 0xFFEB0029},
-      {'name': 'Vivo', 'iconPath': 'assets/images/brands/vivo.svg', 'count': '5 Models', 'color': 0xFF415FFF},
+      {
+        'name': 'Apple',
+        'iconPath': 'assets/images/brands/apple.svg',
+        'count': '12 Models',
+        'color': 0xFF000000,
+      },
+      {
+        'name': 'Samsung',
+        'iconPath': 'assets/images/brands/samsung.svg',
+        'count': '11 Models',
+        'color': 0xFF1428A0,
+      },
+      {
+        'name': 'Xiaomi',
+        'iconPath': 'assets/images/brands/xiaomi.svg',
+        'count': '10 Models',
+        'color': 0xFFFF6900,
+      },
+      {
+        'name': 'Oppo',
+        'iconPath': 'assets/images/brands/oppo.svg',
+        'count': '10 Models',
+        'color': 0xFF1A6B37,
+      },
+      {
+        'name': 'OnePlus',
+        'iconPath': 'assets/images/brands/oneplus.svg',
+        'count': '6 Models',
+        'color': 0xFFEB0029,
+      },
+      {
+        'name': 'Vivo',
+        'iconPath': 'assets/images/brands/vivo.svg',
+        'count': '5 Models',
+        'color': 0xFF415FFF,
+      },
     ],
     'Tablets': [
-      {'name': 'Apple', 'iconPath': 'assets/images/brands/apple.svg', 'count': '6 Models', 'color': 0xFF000000},
-      {'name': 'Samsung', 'iconPath': 'assets/images/brands/samsung.svg', 'count': '6 Models', 'color': 0xFF1428A0},
-      {'name': 'Xiaomi', 'iconPath': 'assets/images/brands/xiaomi.svg', 'count': '4 Models', 'color': 0xFFFF6900},
-      {'name': 'Oppo', 'iconPath': 'assets/images/brands/oppo.svg', 'count': '3 Models', 'color': 0xFF1A6B37},
-      {'name': 'OnePlus', 'iconPath': 'assets/images/brands/oneplus.svg', 'count': '2 Models', 'color': 0xFFEB0029},
+      {
+        'name': 'Apple',
+        'iconPath': 'assets/images/brands/apple.svg',
+        'count': '6 Models',
+        'color': 0xFF000000,
+      },
+      {
+        'name': 'Samsung',
+        'iconPath': 'assets/images/brands/samsung.svg',
+        'count': '6 Models',
+        'color': 0xFF1428A0,
+      },
+      {
+        'name': 'Xiaomi',
+        'iconPath': 'assets/images/brands/xiaomi.svg',
+        'count': '4 Models',
+        'color': 0xFFFF6900,
+      },
+      {
+        'name': 'Oppo',
+        'iconPath': 'assets/images/brands/oppo.svg',
+        'count': '3 Models',
+        'color': 0xFF1A6B37,
+      },
+      {
+        'name': 'OnePlus',
+        'iconPath': 'assets/images/brands/oneplus.svg',
+        'count': '2 Models',
+        'color': 0xFFEB0029,
+      },
     ],
     'Wearables': [
-      {'name': 'Apple', 'iconPath': 'assets/images/brands/apple.svg', 'count': '5 Models', 'color': 0xFF000000},
-      {'name': 'Samsung', 'iconPath': 'assets/images/brands/samsung.svg', 'count': '6 Models', 'color': 0xFF1428A0},
-      {'name': 'Xiaomi', 'iconPath': 'assets/images/brands/xiaomi.svg', 'count': '5 Models', 'color': 0xFFFF6900},
-      {'name': 'Oppo', 'iconPath': 'assets/images/brands/oppo.svg', 'count': '3 Models', 'color': 0xFF1A6B37},
+      {
+        'name': 'Apple',
+        'iconPath': 'assets/images/brands/apple.svg',
+        'count': '5 Models',
+        'color': 0xFF000000,
+      },
+      {
+        'name': 'Samsung',
+        'iconPath': 'assets/images/brands/samsung.svg',
+        'count': '6 Models',
+        'color': 0xFF1428A0,
+      },
+      {
+        'name': 'Xiaomi',
+        'iconPath': 'assets/images/brands/xiaomi.svg',
+        'count': '5 Models',
+        'color': 0xFFFF6900,
+      },
+      {
+        'name': 'Oppo',
+        'iconPath': 'assets/images/brands/oppo.svg',
+        'count': '3 Models',
+        'color': 0xFF1A6B37,
+      },
     ],
     'Accessories': [
-      {'name': 'Apple', 'iconPath': 'assets/images/brands/apple.svg', 'count': '7 Models', 'color': 0xFF000000},
-      {'name': 'Samsung', 'iconPath': 'assets/images/brands/samsung.svg', 'count': '6 Models', 'color': 0xFF1428A0},
-      {'name': 'Xiaomi', 'iconPath': 'assets/images/brands/xiaomi.svg', 'count': '6 Models', 'color': 0xFFFF6900},
-      {'name': 'Oppo', 'iconPath': 'assets/images/brands/oppo.svg', 'count': '5 Models', 'color': 0xFF1A6B37},
-      {'name': 'OnePlus', 'iconPath': 'assets/images/brands/oneplus.svg', 'count': '3 Models', 'color': 0xFFEB0029},
-      {'name': 'Vivo', 'iconPath': 'assets/images/brands/vivo.svg', 'count': '3 Models', 'color': 0xFF415FFF},
+      {
+        'name': 'Apple',
+        'iconPath': 'assets/images/brands/apple.svg',
+        'count': '7 Models',
+        'color': 0xFF000000,
+      },
+      {
+        'name': 'Samsung',
+        'iconPath': 'assets/images/brands/samsung.svg',
+        'count': '6 Models',
+        'color': 0xFF1428A0,
+      },
+      {
+        'name': 'Xiaomi',
+        'iconPath': 'assets/images/brands/xiaomi.svg',
+        'count': '6 Models',
+        'color': 0xFFFF6900,
+      },
+      {
+        'name': 'Oppo',
+        'iconPath': 'assets/images/brands/oppo.svg',
+        'count': '5 Models',
+        'color': 0xFF1A6B37,
+      },
+      {
+        'name': 'OnePlus',
+        'iconPath': 'assets/images/brands/oneplus.svg',
+        'count': '3 Models',
+        'color': 0xFFEB0029,
+      },
+      {
+        'name': 'Vivo',
+        'iconPath': 'assets/images/brands/vivo.svg',
+        'count': '3 Models',
+        'color': 0xFF415FFF,
+      },
     ],
   };
 
   // ==================== NAVIGATION METHODS ====================
-  
+
   void _navigateToProductDetail(Map<String, dynamic> product) {
     Navigator.push(
       context,
@@ -140,9 +247,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 
   bool _isInBestDeals(Map<String, dynamic> product) {
-    return product['id'] == 1 || product['id'] == 2 || product['id'] == 3 || product['id'] == 4 ||
-           product['id'] == 31 || product['id'] == 60 || product['id'] == 85 ||
-           product['id'] == 108 || product['id'] == 119;
+    return product['id'] == 1 ||
+        product['id'] == 2 ||
+        product['id'] == 3 ||
+        product['id'] == 4 ||
+        product['id'] == 31 ||
+        product['id'] == 60 ||
+        product['id'] == 85 ||
+        product['id'] == 108 ||
+        product['id'] == 119;
   }
 
   bool _isUsed(Map<String, dynamic> product) {
@@ -151,16 +264,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   // ==================== ADD TO CART ====================
   void _addToCart(Map<String, dynamic> product) {
-    final int productId = product['id'] as int;
-    setState(() {
-      _cartProducts[productId] = true;
-    });
-    
+    context.read<CartProvider>().addProduct(product);
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -197,21 +311,21 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   bool get _isMainCategory {
     return widget.categoryName == 'Smartphones' ||
-           widget.categoryName == 'Tablets' ||
-           widget.categoryName == 'Wearables' ||
-           widget.categoryName == 'Accessories';
+        widget.categoryName == 'Tablets' ||
+        widget.categoryName == 'Wearables' ||
+        widget.categoryName == 'Accessories';
   }
 
   bool get _isBrandView {
     return !_isMainCategory &&
-           widget.initialFilter != null &&
-           widget.initialFilter != 'All';
+        widget.initialFilter != null &&
+        widget.initialFilter != 'All';
   }
 
   // ==================== FILTERED PRODUCTS ====================
   List<Map<String, dynamic>> get _filteredProducts {
     List<Map<String, dynamic>> filtered = List.from(ProductData.allProducts);
-    
+
     // ========== APPLY SEARCH QUERY ==========
     if (_searchQuery.isNotEmpty) {
       filtered = filtered.where((product) {
@@ -219,57 +333,62 @@ class _CategoryScreenState extends State<CategoryScreen> {
         final brand = product['brand'].toString().toLowerCase();
         final category = product['category'].toString().toLowerCase();
         final searchQuery = _searchQuery.toLowerCase();
-        return name.contains(searchQuery) || 
-               brand.contains(searchQuery) || 
-               category.contains(searchQuery);
+        return name.contains(searchQuery) ||
+            brand.contains(searchQuery) ||
+            category.contains(searchQuery);
       }).toList();
     }
-    
+
     if (widget.categoryName == 'New Arrivals') {
       filtered = filtered.where((p) => p['isNew'] == true).toList();
       if (_selectedFilter != 'All') {
-        filtered = filtered.where((p) => p['brand'] == _selectedFilter).toList();
+        filtered = filtered
+            .where((p) => p['brand'] == _selectedFilter)
+            .toList();
       }
       _applySort(filtered);
       return filtered;
     }
-    
+
     if (widget.categoryName == 'Best Deals') {
       filtered = filtered.where((p) => _isInBestDeals(p)).toList();
       if (_selectedFilter != 'All') {
-        filtered = filtered.where((p) => p['brand'] == _selectedFilter).toList();
+        filtered = filtered
+            .where((p) => p['brand'] == _selectedFilter)
+            .toList();
       }
       _applySort(filtered);
       return filtered;
     }
-    
+
     if (_isBrandView) {
-      final selectedBrand =
-          _selectedFilter == 'All'
-              ? widget.initialFilter!
-              : _selectedFilter;
+      final selectedBrand = _selectedFilter == 'All'
+          ? widget.initialFilter!
+          : _selectedFilter;
 
-      filtered = filtered
-          .where((p) => p['brand'] == selectedBrand)
-          .toList();
+      filtered = filtered.where((p) => p['brand'] == selectedBrand).toList();
 
       _applySort(filtered);
       return filtered;
     }
-    
+
     if (_isMainCategory) {
-      filtered = filtered.where((p) => p['category'] == widget.categoryName).toList();
+      filtered = filtered
+          .where((p) => p['category'] == widget.categoryName)
+          .toList();
       if (_selectedFilter != 'All') {
-        filtered = filtered.where((p) => p['brand'] == _selectedFilter).toList();
+        filtered = filtered
+            .where((p) => p['brand'] == _selectedFilter)
+            .toList();
       }
       _applySort(filtered);
       return filtered;
     }
-    
+
     if (_selectedFilter != 'All') {
       filtered = filtered.where((p) => p['brand'] == _selectedFilter).toList();
     }
-    
+
     _applySort(filtered);
     return filtered;
   }
@@ -286,7 +405,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
         filtered.sort((a, b) => b['rating'].compareTo(a['rating']));
         break;
       case 'Newest':
-        filtered.sort((a, b) => (b['isNew'] ? 1 : 0).compareTo(a['isNew'] ? 1 : 0));
+        filtered.sort(
+          (a, b) => (b['isNew'] ? 1 : 0).compareTo(a['isNew'] ? 1 : 0),
+        );
         break;
       default:
         break;
@@ -320,17 +441,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     final productCount = _filteredProducts.length;
     final displayName = widget.categoryName;
+    final cart = context.watch<CartProvider>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      appBar: _buildAppBar(displayName),
+      appBar: _buildAppBar(displayName, cart),
       body: _buildBody(),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
   // ==================== APP BAR ====================
-  PreferredSizeWidget _buildAppBar(String title) {
+  PreferredSizeWidget _buildAppBar(String title, CartProvider cart) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -367,7 +489,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
         Stack(
           children: [
             IconButton(
-              icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF0F172A)),
+              icon: const Icon(
+                Icons.shopping_cart_outlined,
+                color: Color(0xFF0F172A),
+              ),
               onPressed: _navigateToCart, // ✅ FIXED: Navigates to cart
             ),
             Positioned(
@@ -375,10 +500,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
               top: 6,
               child: Container(
                 padding: const EdgeInsets.all(3),
-                decoration: const BoxDecoration(color: Color(0xFFFF3B30), shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFF3B30),
+                  shape: BoxShape.circle,
+                ),
                 child: Text(
-                  '${_cartProducts.values.where((v) => v).length}',
-                  style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                  '${cart.itemCount}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 8,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -395,15 +527,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
     }
 
     final productCount = _filteredProducts.length;
-    
+
     return Column(
       children: [
         _buildFilterSection(productCount),
         _buildProductCount(productCount),
         Expanded(
-          child: productCount == 0
-              ? _buildEmptyState()
-              : _buildProductGrid(),
+          child: productCount == 0 ? _buildEmptyState() : _buildProductGrid(),
         ),
       ],
     );
@@ -411,7 +541,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Widget _buildSubCategoriesGrid() {
     final subCats = _subCategories[widget.categoryName] ?? [];
-    
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -452,7 +582,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget _buildSubCategoryCard(Map<String, dynamic> sub) {
     final Color brandColor = Color(sub['color'] as int);
     final String iconPath = sub['iconPath'];
-    
+
     return InkWell(
       onTap: () => _selectSubCategory(sub['name']),
       borderRadius: BorderRadius.circular(16),
@@ -536,10 +666,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             const SizedBox(height: 2),
             Text(
               sub['count'],
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade500,
-              ),
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
             ),
           ],
         ),
@@ -552,10 +679,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
       return const SizedBox.shrink();
     }
 
-    final showFilters = _isBrandView || 
-                        _isMainCategory ||
-                        widget.categoryName == 'New Arrivals' ||
-                        widget.categoryName == 'Best Deals';
+    final showFilters =
+        _isBrandView ||
+        _isMainCategory ||
+        widget.categoryName == 'New Arrivals' ||
+        widget.categoryName == 'Best Deals';
 
     if (!showFilters) {
       return Container(
@@ -635,13 +763,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     backgroundColor: Colors.grey.shade100,
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.white : Colors.grey.shade700,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w500,
                       fontSize: 13,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: BorderSide(
-                        color: isSelected ? Colors.transparent : Colors.grey.shade300,
+                        color: isSelected
+                            ? Colors.transparent
+                            : Colors.grey.shade300,
                       ),
                     ),
                     elevation: 0,
@@ -703,7 +835,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     if (_showSubCategories) {
       return const SizedBox.shrink();
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -711,10 +843,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         children: [
           Text(
             'Showing $count products',
-            style: TextStyle(
-              color: Colors.grey.shade500,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
           ),
           IconButton(
             onPressed: () {},
@@ -783,14 +912,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final bool isNew = badgeType == 'new';
     final bool isUsed = badgeType == 'used';
     final bool isNewRegular = badgeType == 'new_regular';
-    
+
     final bool hasDiscount = isBestDeal;
-    final int? discountedPrice = hasDiscount ? (product['price'] * 0.85).round() : null;
+    final int? discountedPrice = hasDiscount
+        ? (product['price'] * 0.85).round()
+        : null;
     final bool productIsUsed = _isUsed(product);
-    
-    final int productId = product['id'] as int;
-    final bool isFavorited = _favoritedProducts[productId] ?? false;
-    final bool isInCart = _cartProducts[productId] ?? false;
+
+    final bool isFavorited = context.watch<CartProvider>().isFavorite(product);
+    final bool isInCart = context.watch<CartProvider>().containsProduct(
+      product,
+    );
 
     return GestureDetector(
       onTap: () => _navigateToProductDetail(product),
@@ -820,7 +952,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FAFC),
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(14),
+                      ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
@@ -828,7 +962,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         product['image'],
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.phone_android_rounded, size: 32, color: Colors.grey);
+                          return const Icon(
+                            Icons.phone_android_rounded,
+                            size: 32,
+                            color: Colors.grey,
+                          );
                         },
                       ),
                     ),
@@ -839,7 +977,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       left: 4,
                       top: 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFF3B30),
                           borderRadius: BorderRadius.circular(4),
@@ -866,7 +1007,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       left: 4,
                       top: 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [Color(0xFF10B981), Color(0xFF059669)],
@@ -897,7 +1041,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       left: 4,
                       top: 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF6B7280),
                           borderRadius: BorderRadius.circular(4),
@@ -924,7 +1071,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       left: 4,
                       top: 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 3,
+                          vertical: 1,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF10B981),
                           borderRadius: BorderRadius.circular(3),
@@ -947,9 +1097,22 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     top: 4,
                     child: GestureDetector(
                       onTap: () {
-                        setState(() {
-                          _favoritedProducts[productId] = !isFavorited;
-                        });
+                        final added = context
+                            .read<CartProvider>()
+                            .toggleFavorite(product);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              added
+                                  ? 'Added to favorites'
+                                  : 'Removed from favorites',
+                            ),
+                            duration: const Duration(seconds: 1),
+                            backgroundColor: added
+                                ? const Color(0xFF10B981)
+                                : Colors.grey,
+                          ),
+                        );
                       },
                       child: Container(
                         padding: const EdgeInsets.all(4),
@@ -958,8 +1121,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          isFavorited ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                          color: isFavorited ? const Color(0xFFFF3B30) : const Color(0xFF94A3B8),
+                          isFavorited
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          color: isFavorited
+                              ? const Color(0xFFFF3B30)
+                              : const Color(0xFF94A3B8),
                           size: 16,
                         ),
                       ),
@@ -983,7 +1150,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 3,
+                                vertical: 1,
+                              ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF007BF6).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(3),
@@ -997,13 +1167,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 ),
                               ),
                             ),
-                            if (productIsUsed && !isUsed && !isBestDeal && !isNew && !isNewRegular)
+                            if (productIsUsed &&
+                                !isUsed &&
+                                !isBestDeal &&
+                                !isNew &&
+                                !isNewRegular)
                               const SizedBox(width: 4),
-                            if (productIsUsed && !isUsed && !isBestDeal && !isNew && !isNewRegular)
+                            if (productIsUsed &&
+                                !isUsed &&
+                                !isBestDeal &&
+                                !isNew &&
+                                !isNewRegular)
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                  vertical: 1,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF6B7280).withOpacity(0.1),
+                                  color: const Color(
+                                    0xFF6B7280,
+                                  ).withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(3),
                                 ),
                                 child: const Text(
@@ -1030,7 +1213,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                         Row(
                           children: [
-                            const Icon(Icons.star_rounded, color: Colors.amber, size: 9),
+                            const Icon(
+                              Icons.star_rounded,
+                              color: Colors.amber,
+                              size: 9,
+                            ),
                             const SizedBox(width: 2),
                             Text(
                               '${product['rating']}',
@@ -1061,44 +1248,44 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 ),
                               ),
                             Text(
-                              hasDiscount ? '\$$discountedPrice' : '\$${product['price']}',
+                              hasDiscount
+                                  ? '\$$discountedPrice'
+                                  : '\$${product['price']}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
-                                color: productIsUsed && !isBestDeal ? const Color(0xFF6B7280) : const Color(0xFF0F172A),
+                                color: productIsUsed && !isBestDeal
+                                    ? const Color(0xFF6B7280)
+                                    : const Color(0xFF0F172A),
                               ),
                             ),
                           ],
                         ),
                         GestureDetector(
-                          onTap: () {
-                            if (!isInCart) {
-                              _addToCart(product);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Already in cart! 🛒'),
-                                  duration: Duration(seconds: 1),
-                                  backgroundColor: Colors.orange,
-                                ),
-                              );
-                            }
-                          },
+                          onTap: () => _addToCart(product),
                           child: Container(
                             padding: const EdgeInsets.all(3),
                             decoration: BoxDecoration(
-                              color: isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6),
+                              color: isInCart
+                                  ? const Color(0xFF10B981)
+                                  : const Color(0xFF007BF6),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: (isInCart ? const Color(0xFF10B981) : const Color(0xFF007BF6)).withOpacity(0.3),
+                                  color:
+                                      (isInCart
+                                              ? const Color(0xFF10B981)
+                                              : const Color(0xFF007BF6))
+                                          .withOpacity(0.3),
                                   blurRadius: 4,
                                   offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
                             child: Icon(
-                              isInCart ? Icons.check_rounded : Icons.add_rounded,
+                              isInCart
+                                  ? Icons.check_rounded
+                                  : Icons.add_rounded,
                               color: Colors.white,
                               size: 12,
                             ),
@@ -1121,7 +1308,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 16, offset: const Offset(0, -4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
+          ),
+        ],
       ),
       child: BottomNavigationBar(
         currentIndex: 0,
@@ -1154,11 +1347,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
         elevation: 0,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.compare_arrows_rounded), label: 'Compare'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_border_rounded), activeIcon: Icon(Icons.favorite_rounded), label: 'Favorites'),
-          BottomNavigationBarItem(icon: Icon(Icons.storefront_rounded), label: 'Nearby'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), activeIcon: Icon(Icons.person_rounded), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.compare_arrows_rounded),
+            label: 'Compare',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border_rounded),
+            activeIcon: Icon(Icons.favorite_rounded),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.storefront_rounded),
+            label: 'Nearby',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline_rounded),
+            activeIcon: Icon(Icons.person_rounded),
+            label: 'Profile',
+          ),
         ],
       ),
     );
