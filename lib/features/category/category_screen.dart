@@ -1328,13 +1328,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           } else if (index == 3) {
             _navigateToNearby();
           } else if (index == 4) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Profile feature coming soon!'),
-                duration: Duration(seconds: 1),
-                backgroundColor: Color(0xFF007BF6),
-              ),
-            );
+            Navigator.pushNamed(context, '/profile');
           }
         },
         type: BottomNavigationBarType.fixed,

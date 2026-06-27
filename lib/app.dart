@@ -14,56 +14,69 @@ import 'features/category/category_screen.dart';
 import 'features/detail/product_detail_screen.dart';
 import 'state/app_provider.dart';
 import 'theme/app_theme.dart';
+import 'features/profile/profile_screen.dart';
+import 'features/settings/settings_screen.dart';
+import 'features/booking/booking_screen.dart';
+import 'features/repair_tracker/repair_tracker_screen.dart';
+import 'features/chat/chat_screen.dart';
+import 'features/reviews/reviews_screen.dart';
+import 'features/gallery/gallery_screen.dart';
 
 class PhoneShopApp extends StatelessWidget {
   const PhoneShopApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => CartProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Phone Shop App',
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        home: const OnboardingScreen(),
-        routes: {
-          '/home': (context) => const HomeScreen(),
-          '/onboarding': (context) => const OnboardingScreen(),
-          '/compare': (context) => const CompareScreen(),
-          '/favorites': (context) => const FavoritesScreen(),
-          '/cart': (context) => const CartScreen(),
-          '/checkout': (context) => const CheckoutScreen(),
-          '/order-success': (context) => const OrderSuccessScreen(),
-          '/promotions': (context) => const PromotionsScreen(),
-          '/nearby': (context) => const NearbyScreen(),
-          '/map': (context) => const MapScreen(),
-          '/category': (context) =>
-              const CategoryScreen(categoryName: 'Smartphones'),
-        },
-        onGenerateRoute: (settings) {
-          // Handle routes with parameters
-          if (settings.name == '/product-detail') {
-            final product = settings.arguments as Map<String, dynamic>;
-            return MaterialPageRoute(
-              builder: (context) => ProductDetailScreen(product: product),
-            );
-          }
-          if (settings.name == '/category') {
-            final args = settings.arguments as Map<String, dynamic>?;
-            return MaterialPageRoute(
-              builder: (context) => CategoryScreen(
-                categoryName: args?['categoryName'] ?? 'Smartphones',
-                initialFilter: args?['initialFilter'],
-                searchQuery: args?['searchQuery'],
-              ),
-            );
-          }
-          return null;
-        },
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Phone Shop App',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: const ProfileScreen(),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
+        '/compare': (context) => const CompareScreen(),
+        '/favorites': (context) => const FavoritesScreen(),
+        '/cart': (context) => const CartScreen(),
+        '/checkout': (context) => const CheckoutScreen(),
+        '/order-success': (context) => const OrderSuccessScreen(),
+        '/promotions': (context) => const PromotionsScreen(),
+        '/nearby': (context) => const NearbyScreen(),
+        '/map': (context) => const MapScreen(),
+        '/profile': (context) => const ProfileScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/book-repair': (context) => const BookingScreen(),
+        '/repair-tracker': (context) => const RepairTrackerScreen(),
+        '/chat': (context) => const ChatScreen(),
+        '/reviews': (context) => const ReviewsScreen(),
+        '/gallery': (context) => const GalleryScreen(),
+        '/category': (context) => const CategoryScreen(
+          categoryName: 'Smartphones',
+        
+        ),
+      },
+      onGenerateRoute: (settings) {
+        // Handle routes with parameters
+        if (settings.name == '/product-detail') {
+          final product = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => ProductDetailScreen(product: product),
+          );
+        }
+        if (settings.name == '/category') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          return MaterialPageRoute(
+            builder: (context) => CategoryScreen(
+              categoryName: args?['categoryName'] ?? 'Smartphones',
+              initialFilter: args?['initialFilter'],
+              searchQuery: args?['searchQuery'],
+            ),
+          );
+        }
+        return null;
+      },
     );
   }
 }

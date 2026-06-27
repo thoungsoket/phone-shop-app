@@ -12,6 +12,7 @@ import '../detail/product_detail_screen.dart';
 import '../search/search_delegate.dart';
 import '../data/product_data.dart';
 import '../../state/app_provider.dart';
+import '../common/phonehub_store.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -495,10 +496,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 14),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Welcome back! 👋',
                             style: TextStyle(
                               color: Colors.white70,
@@ -507,16 +508,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            'Alex Johnson',
-                            style: TextStyle(
+                            PhoneHubStore.instance.fullName,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            'alex@email.com',
-                            style: TextStyle(
+                            PhoneHubStore.instance.email,
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 12,
                             ),
@@ -634,7 +635,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icons.build_rounded,
                     title: 'Repair Tracker',
                     subtitle: 'Check device status',
-                    onTap: () => _navigateToDrawerItem('Repair Tracker'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/repair-tracker');
+                    },
                   ),
                   _buildDrawerItem(
                     icon: Icons.storefront_rounded,
@@ -649,7 +653,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icons.headset_mic_rounded,
                     title: 'Customer Support',
                     subtitle: '24/7 live chat',
-                    onTap: () => _navigateToDrawerItem('Customer Support'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/chat');
+                    },
                   ),
                   const Divider(
                     height: 24,
@@ -673,7 +680,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icons.settings_rounded,
                     title: 'Settings',
                     subtitle: 'App preferences',
-                    onTap: () => _navigateToDrawerItem('Settings'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/settings');
+                    },
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(
@@ -1299,6 +1309,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 _navigateToPromotions();
               } else if (act['title'] == 'Reserve Device') {
                 _navigateToNearby();
+              } else if (act['title'] == 'Track Repair') {
+                Navigator.pushNamed(context, '/repair-tracker');
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -2054,7 +2066,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               OutlinedButton(
-                onPressed: _navigateToNearby,
+                onPressed: () => Navigator.pushNamed(context, '/booking'),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFFE2E8F0)),
                   shape: RoundedRectangleBorder(
@@ -2173,13 +2185,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (index == 3) {
             _navigateToNearby();
           } else if (index == 4) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Profile feature coming soon!'),
-                duration: Duration(seconds: 1),
-                backgroundColor: Color(0xFF007BF6),
-              ),
-            );
+            Navigator.pushNamed(context, '/profile');
           }
         },
         type: BottomNavigationBarType.fixed,
