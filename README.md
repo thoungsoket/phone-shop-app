@@ -22,19 +22,31 @@ A frontend-only Flutter mobile app for a phone shop.
 This project uses mock data only and is built for classroom demo.
 
 ## Features
-- Light and dark theme
-- Onboarding screens
-- Home page with phone brands and products
-- Product detail screen
-- Compare phones
-- Favorites
-- Cart and checkout
-- Promotions and coupons
-- Store map and nearby stores
-- Booking / repair appointment
-- Chat UI
-- Reviews
-- Photos and videos gallery
+* Light & Dark Theme
+* User Authentication (Login & Sign Up)
+* Onboarding Screens
+* Home Dashboard
+* Product Categories
+* Product Search
+* Product Details
+* Phone Comparison
+* Favorites
+* Shopping Cart
+* Checkout
+* Promotions & Coupons
+* Interactive Store Map
+* Nearby Stores
+* Phone Reservation
+* Repair Appointment Booking
+* Repair Tracker
+* Customer Support Chat
+* Reviews & Ratings
+* Photos & Videos Gallery
+* User Profile
+* Settings
+* Persistent Local Storage (SharedPreferences)
+* State Management (Provider)
+
 
 ## Tech Stack
 - Flutter 3.x
@@ -48,18 +60,46 @@ This project uses mock data only and is built for classroom demo.
 
 ## Folder Structure
 ```txt
-lib/
-  main.dart
-  app.dart
-  theme/
-  router/
-  models/
-  data/
-  state/
-  features/
-  widgets/
-  utils/
-assets/
-  images/
-  icons/
-  mock/
+phone-shop-app/
+│
+├── lib/
+│   │
+│   ├── main.dart
+│   │
+│   ├── features/
+│   │   ├── auth/
+│   │   ├── onboarding/
+│   │   ├── home/
+│   │   ├── category/
+│   │   ├── detail/
+│   │   ├── search/
+│   │   ├── compare/
+│   │   ├── favorites/
+│   │   ├── cart/
+│   │   ├── checkout/
+│   │   ├── promotions/
+│   │   ├── nearby/
+│   │   ├── map/
+│   │   ├── booking/
+│   │   ├── repair_tracker/
+│   │   ├── chat/
+│   │   ├── reviews/
+│   │   ├── gallery/
+│   │   ├── profile/
+│   │   ├── settings/
+│   │   ├── common/
+│   │   └── data/
+│   │        └── product_data.dart
+│   │
+│   ├── providers/
+│   │   ├── CartProvider
+│   │   ├── FavoritesProvider
+│   │   └── PhoneHubStore
+│   │
+│   └── assets/
+│       ├── images/
+│       ├── icons/
+│       └── fonts/
+│
+├── pubspec.yaml
+└── README.md
