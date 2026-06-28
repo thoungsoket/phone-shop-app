@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../common/phonehub_ui.dart';
 import '../common/phonehub_store.dart';
+import '../data/product_data.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -11,400 +11,488 @@ class GalleryScreen extends StatefulWidget {
 }
 
 class _GalleryScreenState extends State<GalleryScreen> {
-  int selectedCategory = 0;
+  int selectedTab = 0;
 
-  final categories = const ['All', 'Phones', 'Repairs', 'Accessories'];
-
-  final galleryItems = const [
-    _GalleryItem(
-      title: 'iPhone 16 Pro Display',
-      subtitle: 'Latest flagship showcase',
-      category: 'Phones',
-      icon: Icons.phone_iphone_rounded,
-      gradient: [Color(0xFF2563EB), Color(0xFF00C2FF)],
-    ),
-    _GalleryItem(
-      title: 'Repair Workshop',
-      subtitle: 'Professional repair station',
-      category: 'Repairs',
-      icon: Icons.build_rounded,
-      gradient: [Color(0xFF0EA5E9), Color(0xFF22C55E)],
-    ),
-    _GalleryItem(
-      title: 'Smart Accessories',
-      subtitle: 'Cases, chargers, and watches',
-      category: 'Accessories',
-      icon: Icons.watch_rounded,
-      gradient: [Color(0xFF7C3AED), Color(0xFFEC4899)],
-    ),
-    _GalleryItem(
-      title: 'Customer Pickup',
-      subtitle: 'Ready devices after service',
-      category: 'Repairs',
-      icon: Icons.shopping_bag_rounded,
-      gradient: [Color(0xFFF97316), Color(0xFFFACC15)],
-    ),
-    _GalleryItem(
-      title: 'Premium Headphones',
-      subtitle: 'Audio accessories collection',
-      category: 'Accessories',
-      icon: Icons.headphones_rounded,
-      gradient: [Color(0xFF111827), Color(0xFF64748B)],
-    ),
-    _GalleryItem(
-      title: 'Quality Testing',
-      subtitle: 'Final check before delivery',
-      category: 'Repairs',
-      icon: Icons.verified_rounded,
-      gradient: [Color(0xFF16A34A), Color(0xFF86EFAC)],
-    ),
+  final tabs = const [
+    'All Media',
+    'Product Photos',
+    'Unboxing',
+    'Reviews',
   ];
+
+  List<Map<String, dynamic>> get newArrivals =>
+      ProductData.allProducts.where((p) => p['isNew'] == true).take(6).toList();
+
+  List<Map<String, dynamic>> get bestDeals =>
+      ProductData.allProducts.where((p) => p['isUsed'] == true).take(6).toList();
+
+  List<Map<String, dynamic>> get accessories => ProductData.allProducts
+      .where((p) => p['category'] == 'Accessories')
+      .take(6)
+      .toList();
+
+  List<Map<String, dynamic>> get productPhotos =>
+      ProductData.allProducts.take(30).toList();
+
+  List<Map<String, dynamic>> get unboxing =>
+      ProductData.allProducts.where((p) => p['isNew'] == true).take(20).toList();
+
+  bool _isSaved(Map<String, dynamic> product) {
+    return PhoneHubStore.instance.favoriteGallery.any(
+      (item) => item['name'] == product['name'].toString(),
+    );
+  }
+
+  void _toggleSave(Map<String, dynamic> product) {
+    final wasSaved = _isSaved(product);
+
+    PhoneHubStore.instance.toggleGalleryFavorite(
+      name: product['name'].toString(),
+      image: product['image'].toString(),
+      brand: product['brand'].toString(),
+    );
+
+    setState(() {});
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(wasSaved ? 'Removed from saved photos' : 'Saved to profile'),
+        duration: const Duration(seconds: 1),
+        backgroundColor: wasSaved ? Colors.grey.shade700 : const Color(0xFF007BF6),
+      ),
+    );
+  }
+
+  void _openPreview(Map<String, dynamic> product, bool isVideo) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.black,
+        insetPadding: const EdgeInsets.all(16),
+        child: Stack(
+          children: [
+            InteractiveViewer(
+              child: Image.asset(
+                product['image'],
+                fit: BoxFit.contain,
+              ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.close, color: Colors.white),
+              ),
+            ),
+            if (isVideo)
+              const Positioned.fill(
+                child: Center(
+                  child: CircleAvatar(
+                    radius: 34,
+                    backgroundColor: Colors.black54,
+                    child: Icon(
+                      Icons.play_arrow_rounded,
+                      color: Colors.white,
+                      size: 46,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: PhoneHubStore.instance,
-      builder: (context, _) {
-        final selected = categories[selectedCategory];
-        final items = selected == 'All'
-            ? galleryItems
-            : galleryItems.where((item) => item.category == selected).toList();
-
-        return PhoneHubPageShell(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.maybePop(context),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                  ),
-                  const SizedBox(width: 4),
-                  const Expanded(
-                    child: Text(
-                      'Gallery',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                        color: PhoneHubColors.textDark,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              PhoneHubCard(
-                padding: EdgeInsets.zero,
-                child: Container(
-                  height: 170,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [PhoneHubColors.blue, PhoneHubColors.cyan],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.photo_library_rounded,
-                        color: Colors.white,
-                        size: 38,
-                      ),
-                      const Spacer(),
-                      const Text(
-                        'PhoneHub Moments',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        '${PhoneHubStore.instance.favoriteGallery.length} favorites saved',
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 42,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 10),
-                  itemBuilder: (context, index) {
-                    final active = selectedCategory == index;
-
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(999),
-                      onTap: () => setState(() => selectedCategory = index),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 180),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
-                        decoration: BoxDecoration(
-                          color: active ? PhoneHubColors.blue : Colors.white,
-                          borderRadius: BorderRadius.circular(999),
-                          border: Border.all(
-                            color: active
-                                ? PhoneHubColors.blue
-                                : PhoneHubColors.border,
-                          ),
-                        ),
-                        child: Text(
-                          categories[index],
-                          style: TextStyle(
-                            color: active
-                                ? Colors.white
-                                : PhoneHubColors.textDark,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-              GridView.builder(
-                itemCount: items.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 14,
-                  crossAxisSpacing: 14,
-                  childAspectRatio: .78,
-                ),
-                itemBuilder: (context, index) {
-                  return _GalleryCard(
-                    item: items[index],
-                    onOpen: () => _openViewer(items[index]),
-                  );
-                },
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.menu_rounded, color: Color(0xFF0F172A)),
+          onPressed: () => Navigator.pushNamed(context, '/home'),
+        ),
+        centerTitle: true,
+        title: const Text(
+          'PhoneHub',
+          style: TextStyle(
+            color: Color(0xFF007BF6),
+            fontWeight: FontWeight.w900,
           ),
-        );
-      },
-    );
-  }
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, '/cart'),
+            icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF0F172A)),
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+        children: [
+          const Text(
+            'Photos & Videos',
+            style: TextStyle(
+              color: Color(0xFF0F172A),
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Explore unboxings, reviews, and high-res product shots.',
+            style: TextStyle(
+              color: Color(0xFF64748B),
+              fontSize: 14,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 18),
 
-  void _openViewer(_GalleryItem item) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AnimatedBuilder(
-          animation: PhoneHubStore.instance,
-          builder: (context, _) {
-            final favorite =
-                PhoneHubStore.instance.favoriteGallery.contains(item.title);
+          SizedBox(
+            height: 38,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: tabs.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 10),
+              itemBuilder: (context, index) {
+                final active = selectedTab == index;
 
-            return Dialog(
-              insetPadding: const EdgeInsets.all(18),
-              backgroundColor: Colors.transparent,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        height: 260,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: item.gradient,
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        child: Icon(item.icon, size: 90, color: Colors.white),
+                return InkWell(
+                  borderRadius: BorderRadius.circular(999),
+                  onTap: () {
+                    if (index == 3) {
+                      Navigator.pushNamed(context, '/reviews');
+                      return;
+                    }
+
+                    setState(() {
+                      selectedTab = index;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: active ? const Color(0xFF007BF6) : Colors.white,
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: active
+                            ? const Color(0xFF007BF6)
+                            : const Color(0xFFE2E8F0),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(18),
-                        child: Column(
-                          children: [
-                            Text(
-                              item.title,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900,
-                                color: PhoneHubColors.textDark,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              item.subtitle,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: PhoneHubColors.textGray,
-                              ),
-                            ),
-                            const SizedBox(height: 18),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    onPressed: () {
-                                      PhoneHubStore.instance
-                                          .toggleGalleryFavorite(item.title);
-                                    },
-                                    icon: Icon(
-                                      favorite
-                                          ? Icons.favorite_rounded
-                                          : Icons.favorite_border_rounded,
-                                      color: favorite
-                                          ? const Color(0xFFDC2626)
-                                          : PhoneHubColors.blue,
-                                    ),
-                                    label: Text(
-                                      favorite ? 'Saved' : 'Favorite',
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () => Navigator.pop(context),
-                                    icon: const Icon(Icons.close_rounded),
-                                    label: const Text('Close'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        tabs[index],
+                        style: TextStyle(
+                          color: active ? Colors.white : const Color(0xFF334155),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
-        );
-      },
+                );
+              },
+            ),
+          ),
+
+          const SizedBox(height: 22),
+
+          if (selectedTab == 0) ...[
+            _GallerySection(
+              title: 'New Arrivals',
+              products: newArrivals,
+              isVideo: false,
+              isSaved: _isSaved,
+              onSave: _toggleSave,
+              onOpen: _openPreview,
+            ),
+            const SizedBox(height: 24),
+            _GallerySection(
+              title: 'Best Deals',
+              products: bestDeals,
+              isVideo: false,
+              isSaved: _isSaved,
+              onSave: _toggleSave,
+              onOpen: _openPreview,
+            ),
+            const SizedBox(height: 24),
+            _GallerySection(
+              title: 'Accessories',
+              products: accessories,
+              isVideo: false,
+              isSaved: _isSaved,
+              onSave: _toggleSave,
+              onOpen: _openPreview,
+            ),
+            const SizedBox(height: 24),
+            _GallerySection(
+              title: 'Latest Unboxing',
+              products: unboxing.take(4).toList(),
+              isVideo: true,
+              isSaved: _isSaved,
+              onSave: _toggleSave,
+              onOpen: _openPreview,
+            ),
+          ] else if (selectedTab == 1) ...[
+            _GallerySection(
+              title: 'Product Photos',
+              products: productPhotos,
+              isVideo: false,
+              isSaved: _isSaved,
+              onSave: _toggleSave,
+              onOpen: _openPreview,
+            ),
+          ] else if (selectedTab == 2) ...[
+            _GallerySection(
+              title: 'Unboxing Videos',
+              products: unboxing,
+              isVideo: true,
+              isSaved: _isSaved,
+              onSave: _toggleSave,
+              onOpen: _openPreview,
+            ),
+          ],
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFF007BF6),
+        unselectedItemColor: const Color(0xFF94A3B8),
+        onTap: (index) {
+          if (index == 0) Navigator.pushNamed(context, '/home');
+          if (index == 1) Navigator.pushNamed(context, '/compare');
+          if (index == 2) Navigator.pushNamed(context, '/favorites');
+          if (index == 3) Navigator.pushNamed(context, '/nearby');
+          if (index == 4) Navigator.pushNamed(context, '/profile');
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.compare_arrows_rounded), label: 'Compare'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite_border_rounded), label: 'Favorites'),
+          BottomNavigationBarItem(icon: Icon(Icons.storefront_rounded), label: 'Nearby'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), label: 'Profile'),
+        ],
+      ),
     );
   }
 }
 
-class _GalleryItem {
+class _GallerySection extends StatelessWidget {
   final String title;
-  final String subtitle;
-  final String category;
-  final IconData icon;
-  final List<Color> gradient;
+  final List<Map<String, dynamic>> products;
+  final bool isVideo;
+  final bool Function(Map<String, dynamic>) isSaved;
+  final void Function(Map<String, dynamic>) onSave;
+  final void Function(Map<String, dynamic>, bool) onOpen;
 
-  const _GalleryItem({
+  const _GallerySection({
     required this.title,
-    required this.subtitle,
-    required this.category,
-    required this.icon,
-    required this.gradient,
-  });
-}
-
-class _GalleryCard extends StatelessWidget {
-  final _GalleryItem item;
-  final VoidCallback onOpen;
-
-  const _GalleryCard({
-    required this.item,
+    required this.products,
+    required this.isVideo,
+    required this.isSaved,
+    required this.onSave,
     required this.onOpen,
   });
 
   @override
   Widget build(BuildContext context) {
-    final favorite = PhoneHubStore.instance.favoriteGallery.contains(item.title);
+    if (products.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF0F172A),
+                fontSize: 22,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              '${products.length} items',
+              style: const TextStyle(
+                color: Color(0xFF007BF6),
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        ...products.map(
+          (product) => Padding(
+            padding: const EdgeInsets.only(bottom: 18),
+            child: _GalleryMediaCard(
+              product: product,
+              isVideo: isVideo,
+              saved: isSaved(product),
+              onTap: () => onOpen(product, isVideo),
+              onSave: () => onSave(product),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _GalleryMediaCard extends StatelessWidget {
+  final Map<String, dynamic> product;
+  final bool isVideo;
+  final bool saved;
+  final VoidCallback onTap;
+  final VoidCallback onSave;
+
+  const _GalleryMediaCard({
+    required this.product,
+    required this.isVideo,
+    required this.saved,
+    required this.onTap,
+    required this.onSave,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final title = product['name']?.toString() ?? 'Product';
+    final brand = product['brand']?.toString() ?? 'PhoneHub';
+    final image = product['image']?.toString() ?? '';
 
     return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: onOpen,
-      child: PhoneHubCard(
-        padding: EdgeInsets.zero,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Column(
-            children: [
-              Expanded(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: item.gradient,
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: Icon(
-                        item.icon,
-                        color: Colors.white,
-                        size: 54,
-                      ),
+      borderRadius: BorderRadius.circular(18),
+      onTap: onTap,
+      child: Container(
+        height: 260,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              image,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) {
+                return Container(
+                  color: const Color(0xFFE2E8F0),
+                  child: const Center(
+                    child: Icon(
+                      Icons.image_not_supported_rounded,
+                      size: 52,
+                      color: Color(0xFF64748B),
                     ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: CircleAvatar(
-                        radius: 16,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          favorite
-                              ? Icons.favorite_rounded
-                              : Icons.favorite_border_rounded,
-                          color: favorite
-                              ? const Color(0xFFDC2626)
-                              : PhoneHubColors.blue,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
+                );
+              },
+            ),
+
+            Positioned(
+              top: 10,
+              left: 10,
+              child: IconButton(
+                onPressed: onSave,
+                icon: Icon(
+                  saved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                  color: saved ? const Color(0xFF007BF6) : Colors.white,
+                ),
+                style: IconButton.styleFrom(
+                  backgroundColor: saved ? Colors.white : Colors.black38,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(12),
+            ),
+
+            Positioned(
+              top: 10,
+              right: 10,
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.35),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  isVideo ? Icons.videocam_rounded : Icons.photo_camera_rounded,
+                  color: Colors.white,
+                  size: 17,
+                ),
+              ),
+            ),
+
+            if (isVideo)
+              const Center(
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.black45,
+                  child: Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 42,
+                  ),
+                ),
+              ),
+
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(14, 36, 14, 14),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.78),
+                    ],
+                  ),
+                ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.title,
-                      textAlign: TextAlign.center,
+                      isVideo ? '$title Unboxing' : title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        color: PhoneHubColors.textDark,
+                        color: Colors.white,
                         fontWeight: FontWeight.w900,
-                        fontSize: 13,
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 4),
                     Text(
-                      item.subtitle,
-                      textAlign: TextAlign.center,
+                      isVideo ? '4:20 • $brand Review' : '$brand product shot',
                       style: const TextStyle(
-                        color: PhoneHubColors.textGray,
+                        color: Colors.white70,
                         fontSize: 11,
-                        height: 1.3,
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

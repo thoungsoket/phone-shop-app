@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../features/auth/auth_service.dart';
 
 class CartItem {
   final String id;
@@ -24,11 +26,28 @@ class CartProvider extends ChangeNotifier {
   final List<CartItem> _items = [];
   final List<Map<String, dynamic>> _favorites = [];
 
+  final List<Map<String, dynamic>> _orderHistory = [];
+
+  List<Map<String, dynamic>> get orderHistory => List.unmodifiable(_orderHistory);
+
   List<CartItem> get items => List.unmodifiable(_items);
 
   List<Map<String, dynamic>> get favorites => List.unmodifiable(
     _favorites.map((product) => Map<String, dynamic>.from(product)),
   );
+
+  String get _userKey =>
+    AuthService.instance.currentUser?.email ?? 'guest';
+
+  String _key(String name) => '${name}_$_userKey';
+
+  Future<void> loadUserData() async {
+    // TODO
+  }
+
+  Future<void> saveUserData() async {
+    // TODO
+  }
 
   int get itemCount => _items.fold(0, (sum, item) => sum + item.quantity);
 
@@ -176,6 +195,25 @@ class CartProvider extends ChangeNotifier {
 
   void remove(String id) {
     _items.removeWhere((item) => item.id == id);
+    notifyListeners();
+  }
+
+  void checkoutCart() {
+    if (_items.isEmpty) return;
+
+    for (final item in _items) {
+      _orderHistory.insert(0, {
+        'id': item.id,
+        'name': item.name,
+        'image': item.image,
+        'detail': item.detail,
+        'price': item.price,
+        'quantity': item.quantity,
+        'orderedAt': DateTime.now().toIso8601String(),
+      });
+    }
+
+    _items.clear();
     notifyListeners();
   }
 

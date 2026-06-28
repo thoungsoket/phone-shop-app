@@ -3792,7 +3792,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                         // ========== SPECIFICATIONS ==========
                         _buildSpecifications(),
-                        const SizedBox(height: 16),
+                          const SizedBox(height: 16),
+
+                          const SizedBox(height: 16),
+
+                          Card(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.photo_library_rounded,
+                                color: Color(0xFF007BF6),
+                              ),
+                              title: const Text(
+                                'Photos & Videos',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                              subtitle: const Text('Browse product photos, videos and unboxing'),
+                              trailing: const Icon(Icons.chevron_right_rounded),
+                              onTap: () {
+                                Navigator.pushNamed(context, '/gallery');
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
                       ],
                     ),
                   ),

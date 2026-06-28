@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../common/phonehub_ui.dart';
 import '../common/phonehub_store.dart';
+import '../auth/auth_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -36,12 +37,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _SheetField('Email', emailController),
             _SheetField('Phone Number', phoneController),
           ],
-          onSave: () {
+          onSave: () async {
+           final auth = AuthService.instance;
+
+            await auth.updateCurrentUser(
+              auth.currentUser!.copyWith(
+                fullName: nameController.text,
+                email: emailController.text,
+                phone: phoneController.text,
+              ),
+            );
+
+            await auth.updateCurrentUser(
+              auth.currentUser!.copyWith(
+                fullName: nameController.text,
+                email: emailController.text,
+                phone: phoneController.text,
+              ),
+            );
+
             PhoneHubStore.instance.updateProfile(
               name: nameController.text,
               newEmail: emailController.text,
               newPhone: phoneController.text,
             );
+
+            if (auth.currentUser != null) {
+              auth.currentUser = auth.currentUser!.copyWith(
+                fullName: nameController.text,
+                email: emailController.text,
+                phone: phoneController.text,
+              );
+
+              await auth.saveCurrentUser();
+            }
             Navigator.pop(context);
             _showSnack('Profile updated');
           },
@@ -63,7 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return _EditSheet(
           title: 'Shipping Address',
           fields: [_SheetField('Address', controller)],
-          onSave: () {
+          onSave: () async {
             PhoneHubStore.instance.updateAddress(controller.text);
             Navigator.pop(context);
             _showSnack('Address updated');

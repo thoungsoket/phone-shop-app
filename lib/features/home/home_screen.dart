@@ -731,19 +731,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       trailing: Switch(
-                        value: _isDarkMode,
+                        value: PhoneHubStore.instance.darkMode,
                         onChanged: (value) {
+                          PhoneHubStore.instance.updatePreference('dark', value);
                           setState(() {
                             _isDarkMode = value;
                           });
                         },
-                        activeColor: const Color(0xFF007BF6),
+                        activeThumbColor: const Color(0xFF007BF6),
                         inactiveThumbColor: Colors.grey.shade400,
                         inactiveTrackColor: Colors.grey.shade200,
                       ),
                       onTap: () {
+                        final newValue = !PhoneHubStore.instance.darkMode;
+                        PhoneHubStore.instance.updatePreference('dark', newValue);
                         setState(() {
-                          _isDarkMode = !_isDarkMode;
+                          _isDarkMode = newValue;
                         });
                       },
                     ),

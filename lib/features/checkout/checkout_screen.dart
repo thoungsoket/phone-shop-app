@@ -20,12 +20,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     ).showSnackBar(const SnackBar(content: Text('Promo code applied')));
   }
 
-  void placeOrder() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const OrderSuccessScreen()),
-    );
-    context.read<CartProvider>().clear();
+  Future<void> placeOrder() async {
+    final cart = context.read<CartProvider>();
+
+    //cart.addOrderFromCart();   // Save purchased items to order history
+    await cart.saveUserData(); // Save this user's orders
+    cart.clear();              // Empty the cart
   }
 
   @override

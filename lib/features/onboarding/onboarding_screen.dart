@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../features/home/home_screen.dart'; // Points to your new home screen
+import '../auth/auth_service.dart';
 
 class OnboardingData {
   final String imagePath;
@@ -271,15 +271,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (localIsLastPage) {
                                     // This now navigates to your new home screen
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const HomeScreen(),
-                                      ),
-                                    );
+                                    await AuthService.instance.completeOnboarding();
+
+                                      if (!context.mounted) return;
+
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        '/login',
+                                        (route) => false,
+                                      );
                                   } else {
                                     _pageController.nextPage(
                                       duration: const Duration(milliseconds: 300),

@@ -2,37 +2,31 @@ import 'package:flutter/material.dart';
 
 import '../common/phonehub_store.dart';
 import '../common/phonehub_ui.dart';
+import 'package:provider/provider.dart';
+import '../../state/app_provider.dart';
+import '../auth/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  static const List<_OrderModel> _orders = [
-    _OrderModel(
-      title: 'iPhone 16 Pro Max',
-      subtitle: 'Delivered • 12 Jun 2026',
-      price: '\$1,299',
-      icon: Icons.phone_iphone_rounded,
-    ),
-    _OrderModel(
-      title: 'Apple Watch Ultra',
-      subtitle: 'Delivered • 29 May 2026',
-      price: '\$799',
-      icon: Icons.watch_rounded,
-    ),
-    _OrderModel(
-      title: 'AirPods Pro',
-      subtitle: 'Delivered • 18 May 2026',
-      price: '\$249',
-      icon: Icons.headphones_rounded,
-    ),
-  ];
-
+    
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: PhoneHubStore.instance,
       builder: (context, _) {
         final store = PhoneHubStore.instance;
+        final user = AuthService.instance.currentUser!;
+
+        if (user != null) {
+          store.fullName = user.fullName;
+          store.email = user.email;
+          store.phone = user.phone;
+          store.address = user.address;
+          store.payment = user.payment;
+          store.avatarIndex = user.avatarIndex;
+        }
+        final orders = context.watch<CartProvider>().orderHistory;
         final latestRepair = store.bookings.isNotEmpty ? store.bookings.first : null;
 
         return PhoneHubPageShell(
@@ -52,8 +46,31 @@ class ProfileScreen extends StatelessWidget {
               _QuickActions(),
               const SizedBox(height: 16),
               _RecentOrdersCard(
-                orders: _orders,
-                onViewAll: () => _showOrdersSheet(context, _orders),
+                orders: orders
+                    .map(
+                      (item) => _OrderModel(
+                        title: item['name'],
+                        subtitle: item['detail'],
+                        price: '\$${item['price']}',
+                        image: item['image'],
+                        icon: Icons.shopping_bag_rounded,
+                      ),
+                    )
+                    .toList(),
+                onViewAll: () => _showOrdersSheet(
+                  context,
+                  orders
+                      .map(
+                        (item) => _OrderModel(
+                          title: item['name'],
+                          subtitle: item['detail'],
+                          price: '\$${item['price']}',
+                          image: item['image'],
+                          icon: Icons.shopping_bag_rounded,
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
               const SizedBox(height: 16),
               _SavedItemsCard(store: store),
@@ -269,7 +286,7 @@ class _ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           Text(
-            store.fullName,
+            AuthService.instance.currentUser?.fullName ?? store.fullName,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: PhoneHubColors.textDark,
@@ -279,7 +296,7 @@ class _ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            store.email,
+            AuthService.instance.currentUser?.email ?? store.email,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: PhoneHubColors.textGray,
@@ -490,6 +507,7 @@ class _QuickActionButton extends StatelessWidget {
 class _RecentOrdersCard extends StatelessWidget {
   final List<_OrderModel> orders;
   final VoidCallback onViewAll;
+  
 
   const _RecentOrdersCard({
     required this.orders,
@@ -507,12 +525,21 @@ class _RecentOrdersCard extends StatelessWidget {
             onTap: onViewAll,
           ),
           const SizedBox(height: 14),
-          ...orders.take(2).map(
-                (order) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _OrderTile(order: order),
-                ),
+          if (orders.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Text(
+                'No orders yet',
+                style: TextStyle(color: PhoneHubColors.textGray),
               ),
+            )
+          else
+            ...orders.take(2).map(
+              (order) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _OrderTile(order: order),
+              ),
+            ),              
         ],
       ),
     );
@@ -560,14 +587,24 @@ class _SavedItemsCard extends StatelessWidget {
                   .map(
                     (item) => ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const CircleAvatar(
-                        backgroundColor: PhoneHubColors.softCard,
-                        child: Icon(Icons.favorite, color: Colors.red),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          item['image'] ?? '',
+                          width: 54,
+                          height: 54,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const CircleAvatar(
+                            backgroundColor: PhoneHubColors.softCard,
+                            child: Icon(Icons.image, color: PhoneHubColors.blue),
+                          ),
+                        ),
                       ),
                       title: Text(
-                        item,
+                        item['name'] ?? 'Saved photo',
                         style: const TextStyle(fontWeight: FontWeight.w800),
                       ),
+                      subtitle: Text(item['brand'] ?? 'PhoneHub'),
                       trailing: const Icon(Icons.chevron_right_rounded),
                       onTap: () => Navigator.pushNamed(context, '/gallery'),
                     ),
@@ -736,6 +773,23 @@ class _AccountMenu extends StatelessWidget {
             subtitle: 'Chat with PhoneHub support',
             onTap: () => Navigator.pushNamed(context, '/chat'),
           ),
+          const Divider(height: 18),
+          _ProfileMenuTile(
+            icon: Icons.logout_rounded,
+            title: 'Logout',
+            subtitle: 'Sign out from this account',
+            onTap: () async {
+              await AuthService.instance.logout();
+
+              if (!context.mounted) return;
+
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/login',
+                (route) => false,
+              );
+            },
+          ),
         ],
       ),
     );
@@ -847,7 +901,18 @@ class _OrderTile extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(order.icon, color: PhoneHubColors.blue, size: 30),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                order.image,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => Icon(
+                  order.icon,
+                  color: PhoneHubColors.blue,
+                  size: 30,
+                ),
+              ),
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -1054,12 +1119,14 @@ class _OrderModel {
   final String title;
   final String subtitle;
   final String price;
+  final String image;
   final IconData icon;
 
   const _OrderModel({
     required this.title,
     required this.subtitle,
     required this.price,
+    required this.image,
     required this.icon,
   });
 }

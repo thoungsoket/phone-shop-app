@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../auth/auth_service.dart';
 
 class RepairBooking {
   final String id;
@@ -128,19 +129,26 @@ class PhoneHubStore extends ChangeNotifier {
   final List<RepairBooking> bookings = [];
   final List<ReviewModel> reviews = [];
   final List<ChatMessage> messages = [];
-  final Set<String> favoriteGallery = {};
+  final List<Map<String, String>> favoriteGallery = [];
+
+  String get _userKey {
+  final email = AuthService.instance.currentUser?.email ?? 'guest';
+  return email.replaceAll('@', '_').replaceAll('.', '_');
+  }
+
+  String _key(String name) => '${name}_$_userKey';
 
   Future<void> init() async {
     if (initialized) return;
 
     final prefs = await SharedPreferences.getInstance();
 
-    fullName = prefs.getString('ph_fullName') ?? fullName;
-    email = prefs.getString('ph_email') ?? email;
-    phone = prefs.getString('ph_phone') ?? phone;
-    address = prefs.getString('ph_address') ?? address;
-    payment = prefs.getString('ph_payment') ?? payment;
-    avatarIndex = prefs.getInt('ph_avatarIndex') ?? avatarIndex;
+    fullName = prefs.getString(_key('ph_fullName')) ?? fullName;
+    email = prefs.getString(_key('ph_email')) ?? email;
+    phone = prefs.getString(_key('ph_phone')) ?? phone;
+    address = prefs.getString(_key('ph_address')) ?? address;
+    payment = prefs.getString(_key('ph_payment')) ?? payment;
+    avatarIndex = prefs.getInt(_key('ph_avatarIndex')) ?? avatarIndex;
 
     pushNotifications = prefs.getBool('ph_push') ?? true;
     darkMode = prefs.getBool('ph_dark') ?? false;
@@ -150,7 +158,7 @@ class PhoneHubStore extends ChangeNotifier {
     bookings
       ..clear()
       ..addAll(
-        (prefs.getStringList('ph_bookings') ??
+        (prefs.getStringList(_key('ph_bookings')) ??
                 [
                   const RepairBooking(
                     id: 'RP-2048',
@@ -169,7 +177,7 @@ class PhoneHubStore extends ChangeNotifier {
     reviews
       ..clear()
       ..addAll(
-        (prefs.getStringList('ph_reviews') ??
+        (prefs.getStringList(_key('ph_reviews')) ??
                 [
                   const ReviewModel(
                     name: 'Sokha Rin',
@@ -192,7 +200,7 @@ class PhoneHubStore extends ChangeNotifier {
     messages
       ..clear()
       ..addAll(
-        (prefs.getStringList('ph_messages') ??
+        (prefs.getStringList(_key('ph_messages')) ??
                 [
                   const ChatMessage(
                     me: false,
@@ -210,8 +218,18 @@ class PhoneHubStore extends ChangeNotifier {
       );
 
     favoriteGallery
-      ..clear()
-      ..addAll(prefs.getStringList('ph_gallery_favorites') ?? []);
+    ..clear()
+    ..addAll(
+      (prefs.getStringList(_key('ph_gallery_favorites')) ?? [])
+          .map((e) {
+            final p = e.split('¦');
+            return {
+              'name': p[0],
+              'image': p[1],
+              'brand': p[2],
+            };
+          }),
+    );
 
     initialized = true;
     notifyListeners();
@@ -220,12 +238,12 @@ class PhoneHubStore extends ChangeNotifier {
   Future<void> _save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('ph_fullName', fullName);
-    await prefs.setString('ph_email', email);
-    await prefs.setString('ph_phone', phone);
-    await prefs.setString('ph_address', address);
-    await prefs.setString('ph_payment', payment);
-    await prefs.setInt('ph_avatarIndex', avatarIndex);
+    await prefs.setString(_key('ph_fullName'), fullName);
+    await prefs.setString(_key('ph_email'), email);
+    await prefs.setString(_key('ph_phone'), phone);
+    await prefs.setString(_key('ph_address'), address);
+    await prefs.setString(_key('ph_payment'), payment);
+    await prefs.setInt(_key('ph_avatarIndex'), avatarIndex);
 
     await prefs.setBool('ph_push', pushNotifications);
     await prefs.setBool('ph_dark', darkMode);
@@ -233,20 +251,22 @@ class PhoneHubStore extends ChangeNotifier {
     await prefs.setBool('ph_promo', promotionalEmails);
 
     await prefs.setStringList(
-      'ph_bookings',
+      _key('ph_bookings'),
       bookings.map((e) => e.encode()).toList(),
     );
     await prefs.setStringList(
-      'ph_reviews',
+      _key('ph_reviews'),
       reviews.map((e) => e.encode()).toList(),
     );
     await prefs.setStringList(
-      'ph_messages',
+      _key('ph_messages'),
       messages.map((e) => e.encode()).toList(),
     );
     await prefs.setStringList(
-      'ph_gallery_favorites',
-      favoriteGallery.toList(),
+      _key('ph_gallery_favorites'),
+      favoriteGallery
+          .map((e) => '${e['name']}¦${e['image']}¦${e['brand']}')
+          .toList(),
     );
   }
 
@@ -404,14 +424,35 @@ class PhoneHubStore extends ChangeNotifier {
     _save();
   }
 
-  void toggleGalleryFavorite(String title) {
-    if (favoriteGallery.contains(title)) {
-      favoriteGallery.remove(title);
+  void toggleGalleryFavorite({
+    required String name,
+    required String image,
+    required String brand,
+  }) {
+    final exists = favoriteGallery.any((item) => item['name'] == name);
+
+    if (exists) {
+      favoriteGallery.removeWhere((item) => item['name'] == name);
     } else {
-      favoriteGallery.add(title);
+      favoriteGallery.add({
+        'name': name,
+        'image': image,
+        'brand': brand,
+      });
     }
+
     notifyListeners();
     _save();
+  }
+
+  Future<void> switchUserData() async {
+    bookings.clear();
+    reviews.clear();
+    messages.clear();
+    favoriteGallery.clear();
+
+    initialized = false;
+    await init();
   }
 
   Future<void> resetAll() async {
